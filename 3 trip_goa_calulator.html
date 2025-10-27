@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Goa Trip Cost Calculator</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+    background: #f0f8ff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+  header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  header img {
+    width: 80px;
+    height: auto;
+    margin-right: 10px;
+  }
+  h1 {
+    color: #007acc;
+    margin: 0;
+  }
+  .beach-img {
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .category-btn {
+    width: 100%;
+    background: #007acc;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    margin: 5px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+  }
+  .category-btn:hover {
+    background: #005f99;
+  }
+  .sub-items {
+    display: none;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+  }
+  .sub-item {
+    display: flex;
+    justify-content: space-between;
+    background: #e6f4ff;
+    margin: 5px 0;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .sub-item:hover {
+    background: #cde8ff;
+  }
+  #selectedBox {
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+  }
+  #selectedBox ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  #selectedBox li {
+    padding: 4px 0;
+    color: #007acc;
+  }
+  #totalBox {
+    background: #e6f4ff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 10px;
+    text-align: right;
+    font-weight: bold;
+    color: #007acc;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <img src="logo.png" alt="Company Logo">
+  <h1>Goa Trip Cost Calculator</h1>
+</header>
+
+<img src="beach.png" alt="Beach" class="beach-img">
+
+<!-- Category Buttons -->
+<button class="category-btn" onclick="toggleCategory('hotel')">🏨 Hotel</button>
+<div id="hotel" class="sub-items">
+  <div class="sub-item" data-name="Hotel A" data-cost="2000">Hotel A <span>₹2000</span></div>
+  <div class="sub-item" data-name="Hotel B" data-cost="2500">Hotel B <span>₹2500</span></div>
+</div>
+
+<button class="category-btn" onclick="toggleCategory('water')">🌊 Water Sports</button>
+<div id="water" class="sub-items">
+  <div class="sub-item" data-name="Jet Ski" data-cost="1500">Jet Ski <span>₹1500</span></div>
+  <div class="sub-item" data-name="Parasailing" data-cost="2000">Parasailing <span>₹2000</span></div>
+</div>
+
+<button class="category-btn" onclick="toggleCategory('transport')">🚌 Transportation</button>
+<div id="transport" class="sub-items">
+  <div class="sub-item" data-name="Bus" data-cost="500">Bus <span>₹500</span></div>
+  <div class="sub-item" data-name="Train" data-cost="700">Train <span>₹700</span></div>
+  <div class="sub-item" data-name="Flight" data-cost="3000">Flight <span>₹3000</span></div>
+</div>
+
+<button class="category-btn" onclick="toggleCategory('sight')">🗺️ Sightseeing</button>
+<div id="sight" class="sub-items">
+  <div class="sub-item" data-name="City Tour" data-cost="800">City Tour <span>₹800</span></div>
+  <div class="sub-item" data-name="Beach Visit" data-cost="1000">Beach Visit <span>₹1000</span></div>
+</div>
+
+<!-- Selected Items -->
+<div id="selectedBox">
+  <h3>Selected Items:</h3>
+  <ul id="selectedItems"></ul>
+</div>
+
+<!-- Total -->
+<div id="totalBox">Grand Total: ₹0</div>
+
+<script>
+  const allCategories = document.querySelectorAll('.sub-items');
+  const selectedItemsList = document.getElementById('selectedItems');
+  const totalBox = document.getElementById('totalBox');
+  let selectedItems = [];
+
+  function toggleCategory(id) {
+    allCategories.forEach(cat => {
+      if (cat.id === id) {
+        cat.style.display = (cat.style.display === 'block') ? 'none' : 'block';
+      } else {
+        cat.style.display = 'none';
+      }
+    });
+  }
+
+  document.querySelectorAll('.sub-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const name = item.dataset.name;
+      const cost = parseInt(item.dataset.cost);
+      const existing = selectedItems.find(i => i.name === name);
+
+      if (existing) {
+        // If already selected, remove it
+        selectedItems = selectedItems.filter(i => i.name !== name);
+        item.style.background = '#e6f4ff';
+      } else {
+        // Add it
+        selectedItems.push({ name, cost });
+        item.style.background = '#cde8ff';
+      }
+
+      updateSelectedItems();
+    });
+  });
+
+  function updateSelectedItems() {
+    selectedItemsList.innerHTML = '';
+    let total = 0;
+    selectedItems.forEach(i => {
+      total += i.cost;
+      const li = document.createElement('li');
+      li.textContent = `${i.name} – ₹${i.cost}`;
+      selectedItemsList.appendChild(li);
+    });
+    totalBox.textContent = `Grand Total: ₹${total}`;
+  }
+</script>
+
+</body>
+</html>
