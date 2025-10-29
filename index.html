@@ -8,7 +8,7 @@
   body {
     font-family: Arial, sans-serif;
     max-width: 600px;
-    margin: 150px auto; /* keep same space */
+    margin: 150px auto;
     padding: 10px;
     background: #f0f8ff;
     border-radius: 10px;
@@ -16,14 +16,13 @@
     position: relative;
   }
 
-  /* Cost Calculator text on top space (Bigger Header Now) */
   .top-text {
     text-align: center;
     font-weight: bold;
     color: #007acc;
-    font-size: 40px; /* increased size */
+    font-size: 40px;
     position: absolute;
-    top: -100px; /* moves the text above the box */
+    top: -100px;
     left: 0;
     right: 0;
     text-transform: uppercase;
@@ -39,15 +38,13 @@
     height: auto;
     margin-right: 10px;
   }
-  h1 {
-    color: #007acc;
-    margin: 0;
-  }
+  h1 { color: #007acc; margin: 0; }
   .beach-img {
     width: 100%;
     border-radius: 10px;
     margin-bottom: 10px;
   }
+
   .category-btn {
     width: 100%;
     background: #007acc;
@@ -60,14 +57,9 @@
     cursor: pointer;
     text-align: left;
   }
-  .category-btn:hover {
-    background: #005f99;
-  }
-  .sub-items {
-    display: none;
-    padding: 5px 10px;
-    margin-bottom: 10px;
-  }
+  .category-btn:hover { background: #005f99; }
+
+  .sub-items { display: none; padding: 5px 10px; margin-bottom: 10px; }
   .sub-item {
     display: flex;
     justify-content: space-between;
@@ -77,9 +69,8 @@
     border-radius: 5px;
     cursor: pointer;
   }
-  .sub-item:hover {
-    background: #cde8ff;
-  }
+  .sub-item:hover { background: #cde8ff; }
+
   #selectedBox {
     background: #fff;
     border-radius: 8px;
@@ -87,15 +78,9 @@
     border: 1px solid #ccc;
     margin-top: 10px;
   }
-  #selectedBox ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  #selectedBox li {
-    padding: 4px 0;
-    color: #007acc;
-  }
+  #selectedBox ul { list-style: none; padding: 0; margin: 0; }
+  #selectedBox li { padding: 4px 0; color: #007acc; }
+
   #totalBox {
     background: #e6f4ff;
     padding: 15px;
@@ -105,21 +90,45 @@
     font-weight: bold;
     color: #007acc;
   }
+
+  #printBtn {
+    width: 100%;
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    margin-top: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  #printBtn:hover { background: #218838; }
+
+  h4 { margin: 8px 0; color: #007acc; }
+
+  /* Print area */
+  #printArea { display: none; background:#f0f8ff; padding:20px; border-radius:10px; }
+  #printArea ul { list-style:none; padding:0; }
+  #printArea li { padding:5px 0; color:#007acc; }
+  @media print {
+    body * { visibility: hidden; }
+    #printArea, #printArea * { visibility: visible; }
+    #printArea { position: absolute; left:0; top:0; width:100%; }
+  }
 </style>
 </head>
 <body>
 
-<!-- Text in top space -->
-<div class="top-text">Travel Cost Calculator</div>
+<div class="top-text">Cost Calculator</div>
 
 <header>
-  <img src="logo.png" alt="Company Logo">
+  <img src="logo.png" alt="TTWorld Logo">
   <h1>Goa Trip</h1>
 </header>
 
 <img src="beach.png" alt="Beach" class="beach-img">
 
-<!-- Category Buttons -->
+<!-- Categories -->
 <button class="category-btn" onclick="toggleCategory('transport')">🚌 Transportation</button>
 <div id="transport" class="sub-items">
   <div class="sub-item" data-name="Bus" data-cost="500">Bus <span>₹500</span></div>
@@ -135,27 +144,20 @@
 
 <button class="category-btn" onclick="toggleCategory('sight')">🗺️ Sightseeing</button>
 <div id="sight" class="sub-items">
-
-  <!-- North Goa Sightseeing -->
-  <h4 style="margin: 8px 0; color:#007acc;">North Goa</h4>
-  <div class="sub-item" data-name="Fort Aguada (Entry Fee)" data-cost="500">Fort Aguada (Entry Fee) <span>₹500</span></div>
+  <h4>North Goa</h4>
+  <div class="sub-item" data-name="Fort Aguada" data-cost="500">Fort Aguada <span>₹500</span></div>
   <div class="sub-item" data-name="Calangute Beach" data-cost="400">Calangute Beach <span>₹400</span></div>
   <div class="sub-item" data-name="Baga Beach" data-cost="400">Baga Beach <span>₹400</span></div>
-
-  <!-- South Goa Sightseeing -->
-  <h4 style="margin: 8px 0; color:#007acc;">South Goa</h4>
+  <h4>South Goa</h4>
   <div class="sub-item" data-name="Palolem Beach" data-cost="600">Palolem Beach <span>₹600</span></div>
   <div class="sub-item" data-name="Colva Beach" data-cost="500">Colva Beach <span>₹500</span></div>
   <div class="sub-item" data-name="Cabo De Rama Fort" data-cost="700">Cabo De Rama Fort <span>₹700</span></div>
-
 </div>
 
 <button class="category-btn" onclick="toggleCategory('water')">🌊 Water Sports</button>
 <div id="water" class="sub-items">
   <div class="sub-item" data-name="Jet Ski" data-cost="1500">Jet Ski <span>₹1500</span></div>
   <div class="sub-item" data-name="Parasailing" data-cost="2000">Parasailing <span>₹2000</span></div>
-  <div class="sub-item" data-name="Snorkilling" data-cost="200">Snorkilling <span>₹200</span></div>
-  <div class="sub-item" data-name="Banana Boat" data-cost="100">Banana Boat <span>₹100</span></div>
 </div>
 
 <!-- Selected Items -->
@@ -167,19 +169,29 @@
 <!-- Total -->
 <div id="totalBox">Grand Total: ₹0</div>
 
+<!-- Print Button -->
+<button id="printBtn">🖨️ Show & Print Trip Details</button>
+
+<!-- Print Area -->
+<div id="printArea">
+  <h2 style="text-align:center; color:#007acc;">Goa Trip Details</h2>
+  <ul id="printItems"></ul>
+  <h3 id="printTotal" style="text-align:right; color:#007acc;"></h3>
+</div>
+
 <script>
   const allCategories = document.querySelectorAll('.sub-items');
   const selectedItemsList = document.getElementById('selectedItems');
   const totalBox = document.getElementById('totalBox');
+  const printBtn = document.getElementById('printBtn');
+  const printArea = document.getElementById('printArea');
+  const printItems = document.getElementById('printItems');
+  const printTotal = document.getElementById('printTotal');
   let selectedItems = [];
 
-  function toggleCategory(id) {
+  function toggleCategory(id){
     allCategories.forEach(cat => {
-      if (cat.id === id) {
-        cat.style.display = (cat.style.display === 'block') ? 'none' : 'block';
-      } else {
-        cat.style.display = 'none';
-      }
+      cat.style.display = (cat.id === id) ? (cat.style.display==='block'?'none':'block') : 'none';
     });
   }
 
@@ -189,19 +201,18 @@
       const cost = parseInt(item.dataset.cost);
       const existing = selectedItems.find(i => i.name === name);
 
-      if (existing) {
+      if(existing){
         selectedItems = selectedItems.filter(i => i.name !== name);
         item.style.background = '#e6f4ff';
       } else {
-        selectedItems.push({ name, cost });
+        selectedItems.push({name, cost});
         item.style.background = '#cde8ff';
       }
-
       updateSelectedItems();
     });
   });
 
-  function updateSelectedItems() {
+  function updateSelectedItems(){
     selectedItemsList.innerHTML = '';
     let total = 0;
     selectedItems.forEach(i => {
@@ -212,8 +223,29 @@
     });
     totalBox.textContent = `Grand Total: ₹${total}`;
   }
+
+  printBtn.addEventListener('click', () => {
+    if(selectedItems.length===0){
+      alert("No items selected for trip!");
+      return;
+    }
+
+    // Populate print area
+    printItems.innerHTML = '';
+    let total = 0;
+    selectedItems.forEach(i => {
+      total += i.cost;
+      const li = document.createElement('li');
+      li.textContent = `${i.name} – ₹${i.cost}`;
+      printItems.appendChild(li);
+    });
+    printTotal.textContent = `Grand Total: ₹${total}`;
+
+    printArea.style.display = 'block';
+    window.print();
+    printArea.style.display = 'none';
+  });
 </script>
 
 </body>
 </html>
-
