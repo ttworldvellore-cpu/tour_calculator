@@ -8,12 +8,27 @@
   body {
     font-family: Arial, sans-serif;
     max-width: 600px;
-    margin: 20px auto;
+    margin: 150px auto; /* keep same space */
     padding: 10px;
     background: #f0f8ff;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: relative;
   }
+
+  /* Cost Calculator text on top space (Bigger Header Now) */
+  .top-text {
+    text-align: center;
+    font-weight: bold;
+    color: #007acc;
+    font-size: 40px; /* increased size */
+    position: absolute;
+    top: -100px; /* moves the text above the box */
+    left: 0;
+    right: 0;
+    text-transform: uppercase;
+  }
+
   header {
     display: flex;
     align-items: center;
@@ -94,26 +109,17 @@
 </head>
 <body>
 
+<!-- Text in top space -->
+<div class="top-text">Travel Cost Calculator</div>
+
 <header>
   <img src="logo.png" alt="Company Logo">
-  <h1>Goa Trip Cost Calculator</h1>
+  <h1>Goa Trip</h1>
 </header>
 
 <img src="beach.png" alt="Beach" class="beach-img">
 
 <!-- Category Buttons -->
-<button class="category-btn" onclick="toggleCategory('hotel')">🏨 Hotel</button>
-<div id="hotel" class="sub-items">
-  <div class="sub-item" data-name="Hotel A" data-cost="2000">Hotel A <span>₹2000</span></div>
-  <div class="sub-item" data-name="Hotel B" data-cost="2500">Hotel B <span>₹2500</span></div>
-</div>
-
-<button class="category-btn" onclick="toggleCategory('water')">🌊 Water Sports</button>
-<div id="water" class="sub-items">
-  <div class="sub-item" data-name="Jet Ski" data-cost="1500">Jet Ski <span>₹1500</span></div>
-  <div class="sub-item" data-name="Parasailing" data-cost="2000">Parasailing <span>₹2000</span></div>
-</div>
-
 <button class="category-btn" onclick="toggleCategory('transport')">🚌 Transportation</button>
 <div id="transport" class="sub-items">
   <div class="sub-item" data-name="Bus" data-cost="500">Bus <span>₹500</span></div>
@@ -121,10 +127,22 @@
   <div class="sub-item" data-name="Flight" data-cost="3000">Flight <span>₹3000</span></div>
 </div>
 
+<button class="category-btn" onclick="toggleCategory('hotel')">🏨 Hotel</button>
+<div id="hotel" class="sub-items">
+  <div class="sub-item" data-name="Hotel A" data-cost="2000">Hotel A <span>₹2000</span></div>
+  <div class="sub-item" data-name="Hotel B" data-cost="2500">Hotel B <span>₹2500</span></div>
+</div>
+
 <button class="category-btn" onclick="toggleCategory('sight')">🗺️ Sightseeing</button>
 <div id="sight" class="sub-items">
   <div class="sub-item" data-name="City Tour" data-cost="800">City Tour <span>₹800</span></div>
   <div class="sub-item" data-name="Beach Visit" data-cost="1000">Beach Visit <span>₹1000</span></div>
+</div>
+
+<button class="category-btn" onclick="toggleCategory('water')">🌊 Water Sports</button>
+<div id="water" class="sub-items">
+  <div class="sub-item" data-name="Jet Ski" data-cost="1500">Jet Ski <span>₹1500</span></div>
+  <div class="sub-item" data-name="Parasailing" data-cost="2000">Parasailing <span>₹2000</span></div>
 </div>
 
 <!-- Selected Items -->
@@ -159,11 +177,9 @@
       const existing = selectedItems.find(i => i.name === name);
 
       if (existing) {
-        // If already selected, remove it
         selectedItems = selectedItems.filter(i => i.name !== name);
         item.style.background = '#e6f4ff';
       } else {
-        // Add it
         selectedItems.push({ name, cost });
         item.style.background = '#cde8ff';
       }
