@@ -2,250 +2,671 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Goa Trip Cost Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TT World - Goa Trip</title>
 <style>
   body {
-    font-family: Arial, sans-serif;
-    max-width: 600px;
-    margin: 150px auto;
-    padding: 10px;
-    background: #f0f8ff;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    position: relative;
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: #f6f8fa;
+    padding: 0;
   }
-
-  .top-text {
-    text-align: center;
-    font-weight: bold;
-    color: #007acc;
-    font-size: 40px;
-    position: absolute;
-    top: -100px;
-    left: 0;
-    right: 0;
-    text-transform: uppercase;
-  }
-
-  header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-  header img {
-    width: 80px;
-    height: auto;
-    margin-right: 10px;
-  }
-  h1 { color: #007acc; margin: 0; }
-  .beach-img {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 10px;
-  }
-
-  .category-btn {
-    width: 100%;
-    background: #007acc;
+  /* HEADER */
+  header.tt-header {
+    background-color: #007acc;
     color: white;
-    border: none;
-    padding: 10px;
-    font-size: 16px;
-    margin: 5px 0;
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: left;
-  }
-  .category-btn:hover { background: #005f99; }
-
-  .sub-items { display: none; padding: 5px 10px; margin-bottom: 10px; }
-  .sub-item {
     display: flex;
     justify-content: space-between;
-    background: #e6f4ff;
-    margin: 5px 0;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  .sub-item:hover { background: #cde8ff; }
-
-  #selectedBox {
-    background: #fff;
-    border-radius: 8px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    margin-top: 10px;
-  }
-  #selectedBox ul { list-style: none; padding: 0; margin: 0; }
-  #selectedBox li { padding: 4px 0; color: #007acc; }
-
-  #totalBox {
-    background: #e6f4ff;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 10px;
-    text-align: right;
-    font-weight: bold;
-    color: #007acc;
-  }
-
-  #printBtn {
+    align-items: center;
+    padding: 10px 25px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    position: fixed;
     width: 100%;
-    background: #28a745;
-    color: white;
-    border: none;
-    padding: 10px;
-    font-size: 16px;
-    margin-top: 10px;
-    border-radius: 8px;
-    cursor: pointer;
+    top: 0;
+    z-index: 1100;
   }
-  #printBtn:hover { background: #218838; }
-
-  h4 { margin: 8px 0; color: #007acc; }
-
-  /* Print area */
-  #printArea { display: none; background:#f0f8ff; padding:20px; border-radius:10px; }
-  #printArea ul { list-style:none; padding:0; }
-  #printArea li { padding:5px 0; color:#007acc; }
-  @media print {
-    body * { visibility: hidden; }
-    #printArea, #printArea * { visibility: visible; }
-    #printArea { position: absolute; left:0; top:0; width:100%; }
-  }
+  .logo-section { display: flex; align-items: center; gap: 15px; }
+  .logo { width: 50px; height: 50px; object-fit: contain; border-radius: 10px; background: white; padding: 5px; }
+  .site-title { font-size: 1.6rem; margin: 0; font-weight: 600; letter-spacing: 1px; }
+  .hamburger { font-size: 26px; cursor: pointer; padding: 8px 12px; background: #005fa3; color: white; border: none; border-radius: 6px; }
+  .sidebar { position: fixed; left: -250px; top: 70px; height: calc(100% - 70px); width: 250px; background: #003a78; color: white; transition: all 0.3s ease; padding-top: 10px; box-shadow: 3px 0 10px rgba(0,0,0,0.2); z-index: 1000; }
+  .sidebar.active { left: 0; }
+  .sidebar a { display: block; padding: 15px 25px; color: white; text-decoration: none; font-size: 16px; }
+  .sidebar a:hover { background: #0056a3; }
+  .main { padding: 100px 25px; transition: margin-left 0.3s; }
+  .sidebar.active ~ .main { margin-left: 250px; }
+  .trip-section { display: flex; justify-content: center; margin-top: 40px; }
+  .trip-card { background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; width: 260px; transition: transform 0.3s; }
+  .trip-card:hover { transform: translateY(-5px); }
+  .trip-card img { width: 100%; height: 150px; object-fit: cover; }
+  .trip-info { padding: 12px; }
+  .trip-info h4 { margin: 0; color: #003a78; }
+  .trip-info p { font-size: 0.9rem; color: #333; margin: 5px 0 10px; }
+  .book-btn { background: #007acc; color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
+  .book-btn:hover { background: #005fa3; }
+  .popup { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; width: 320px; padding: 25px; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); z-index: 2000; }
+  .popup.active { display: block; }
+  .popup h3 { margin-top: 0; color: #003a78; border-bottom: 2px solid #007acc; padding-bottom: 5px; }
+  .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1500; }
+  .overlay.active { display: block; }
+  .selection-container { max-width: 500px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden;}
+  .trip-banner { width: 100%; height: 220px; border-radius: 12px 12px 0 0; object-fit: cover; }
+  .trip-title { text-align: center; background: #007acc; color: white; padding: 12px; font-size: 1.4rem; font-weight: 600; }
+  .accordion { background-color: #007acc; color: #fff; cursor: pointer; padding: 14px 20px; width: 100%; text-align: left; border: none; outline: none; transition: 0.3s; font-weight: 500; border-radius: 8px; margin-top: 10px; display: flex; align-items: center; justify-content: space-between;}
+  .accordion:hover { background-color: #005f99; }
+  .accordion:after { content: '\25BC'; transition: transform 0.3s; }
+  .accordion.active:after { transform: rotate(180deg); }
+  .panel { background: #f1f8ff; border-radius: 0 0 8px 8px; overflow: hidden; padding: 0 20px; max-height: 0; transition: max-height 0.3s ease-out; }
+  .panel.show { max-height: 1000px; transition: max-height 0.5s ease-in; }
+  .panel ul { list-style: none; margin: 10px 0; padding: 0; }
+  .panel li { padding: 8px 0; border-bottom: 1px solid #ddd; cursor: pointer; }
+  .panel li:hover { background-color: #e6f2ff; }
+  .panel li.selected { background-color: #007acc; color: white; font-weight: 600; }
+  .sublist { margin-left: 20px; padding: 10px; border-radius: 8px; background-color: #e0f2ff; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+  .sublist.show { max-height: 1500px; transition: max-height 0.5s ease-in; }
+  .sub-section { display: none; background: #fff; border-radius: 10px; margin: 10px 0; padding: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);}
+  .sub-section img { width: 100%; border-radius: 8px; margin-bottom: 8px;}
+  .sub-section h4 { margin: 10px 0 5px; color: #007acc;}
+  .summary-box { background: #fff; border-top: 2px solid #007acc; padding: 15px; margin-top: 10px;}
+  .summary-box h4 { margin: 0 0 8px 0; color: #007acc;}
+  #selectedItems { font-size: 0.95rem; color: #333; min-height: 24px;}
+  .summary-category { font-weight: bold; margin-top: 8px;}
+  .summary-item { margin-left: 10px;}
+  .total { text-align: right; font-weight: 600; color: #333; padding: 8px 15px; border-top: 1px solid #ddd;}
+  .button-group { display: flex; justify-content: space-between; margin: 10px 15px; }
+  .btn-preview { flex: 1; padding: 12px; font-weight: bold; border-radius: 8px; color: white; text-align: center; cursor: pointer; user-select: none; text-decoration: none; background: #007acc; margin-right: 10px;}
+  .btn-preview:hover { background: #005f99; }
+  /* .btn-print { background: #28a745; } (removed green print style and related) */
+  /* .btn-print:hover { background: #218838; } */
+  .panel > ul > li.toggle-sublist { font-weight: 700; color: #007acc; cursor: pointer;}
 </style>
 </head>
 <body>
-
-<div class="top-text">Cost Calculator</div>
-
-<header>
-  <img src="logo.png" alt="TTWorld Logo">
-  <h1>Goa Trip</h1>
+<header class="tt-header">
+  <div class="logo-section">
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <img src="./logo.png" alt="TT World Logo" class="logo" />
+    <h1 class="site-title">TT WORLD</h1>
+  </div>
 </header>
-
-<img src="beach.png" alt="Beach" class="beach-img">
-
-<!-- Categories -->
-<button class="category-btn" onclick="toggleCategory('transport')">🚌 Transportation</button>
-<div id="transport" class="sub-items">
-  <div class="sub-item" data-name="Bus" data-cost="500">Bus <span>₹500</span></div>
-  <div class="sub-item" data-name="Train" data-cost="700">Train <span>₹700</span></div>
-  <div class="sub-item" data-name="Flight" data-cost="3000">Flight <span>₹3000</span></div>
+<div class="sidebar" id="sidebar">
+  <a href="#" onclick="showHome()">🏠 Home</a>
+  <a href="#" onclick="showTrips()">✈️ Trips</a>
+  <a href="#" onclick="openContact()">📞 Contact</a>
 </div>
-
-<button class="category-btn" onclick="toggleCategory('hotel')">🏨 Hotel</button>
-<div id="hotel" class="sub-items">
-  <div class="sub-item" data-name="Hotel A" data-cost="2000">Hotel A <span>₹2000</span></div>
-  <div class="sub-item" data-name="Hotel B" data-cost="2500">Hotel B <span>₹2500</span></div>
+<div class="overlay" id="overlay" onclick="closeContact()"></div>
+<div class="popup" id="contactPopup">
+  <h3>Contact Information</h3>
+  <p><b>Main Office:</b><br>13/1, Arni Road, Vellore, 632001</p>
+  <p>📞 +91 95665 96825<br>📞 +91 72000 87875</p>
+  <p><b>Email:</b> info@triptotheworld.in</p>
+  <p><b>🌐 Website:</b> <a href="https://www.triptotheworld.in" target="_blank">www.triptotheworld.in</a></p>
+  <button onclick="closeContact()">Close</button>
 </div>
-
-<button class="category-btn" onclick="toggleCategory('sight')">🗺️ Sightseeing</button>
-<div id="sight" class="sub-items">
-  <h4>North Goa</h4>
-  <div class="sub-item" data-name="Fort Aguada" data-cost="500">Fort Aguada <span>₹500</span></div>
-  <div class="sub-item" data-name="Calangute Beach" data-cost="400">Calangute Beach <span>₹400</span></div>
-  <div class="sub-item" data-name="Baga Beach" data-cost="400">Baga Beach <span>₹400</span></div>
-  <h4>South Goa</h4>
-  <div class="sub-item" data-name="Palolem Beach" data-cost="600">Palolem Beach <span>₹600</span></div>
-  <div class="sub-item" data-name="Colva Beach" data-cost="500">Colva Beach <span>₹500</span></div>
-  <div class="sub-item" data-name="Cabo De Rama Fort" data-cost="700">Cabo De Rama Fort <span>₹700</span></div>
+<div class="main" id="mainContent">
+  <h2>Welcome to TT World 🌍</h2>
+  <p>Select a section from the sidebar to get started.</p>
 </div>
-
-<button class="category-btn" onclick="toggleCategory('water')">🌊 Water Sports</button>
-<div id="water" class="sub-items">
-  <div class="sub-item" data-name="Jet Ski" data-cost="1500">Jet Ski <span>₹1500</span></div>
-  <div class="sub-item" data-name="Parasailing" data-cost="2000">Parasailing <span>₹2000</span></div>
-</div>
-
-<!-- Selected Items -->
-<div id="selectedBox">
-  <h3>Selected Items:</h3>
-  <ul id="selectedItems"></ul>
-</div>
-
-<!-- Total -->
-<div id="totalBox">Grand Total: ₹0</div>
-
-<!-- Print Button -->
-<button id="printBtn">🖨️ Show & Print Trip Details</button>
-
-<!-- Print Area -->
-<div id="printArea">
-  <h2 style="text-align:center; color:#007acc;">Goa Trip Details</h2>
-  <ul id="printItems"></ul>
-  <h3 id="printTotal" style="text-align:right; color:#007acc;"></h3>
-</div>
-
 <script>
-  const allCategories = document.querySelectorAll('.sub-items');
-  const selectedItemsList = document.getElementById('selectedItems');
-  const totalBox = document.getElementById('totalBox');
-  const printBtn = document.getElementById('printBtn');
-  const printArea = document.getElementById('printArea');
-  const printItems = document.getElementById('printItems');
-  const printTotal = document.getElementById('printTotal');
-  let selectedItems = [];
+function toggleSidebar(){ document.getElementById("sidebar").classList.toggle("active"); }
+function showHome(){
+  document.getElementById("mainContent").innerHTML = "<h2>Welcome to TT World 🌍</h2><p>Discover amazing trips!</p>";
+  document.getElementById("sidebar").classList.remove("active");
+}
+function openContact(){
+  document.getElementById("contactPopup").classList.add("active");
+  document.getElementById("overlay").classList.add("active");
+  document.getElementById("sidebar").classList.remove("active");
+}
+function closeContact(){
+  document.getElementById("contactPopup").classList.remove("active");
+  document.getElementById("overlay").classList.remove("active");
+}
+function showTrips(){
+  document.getElementById("mainContent").innerHTML = `
+    <h2>Explore Our Tour Packages ✈️</h2>
+    <div class='trip-section'>
+      <div class='trip-card'>
+        <img src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e' alt='Goa Beach'/>
+        <div class='trip-info'>
+          <h4>Goa Beach Getaway</h4>
+          <p>Enjoy sunny beaches, nightlife, and heritage.</p>
+          <button class='book-btn' onclick='loadGoaSelection()'>View Details</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById("sidebar").classList.remove("active");
+}
+window.onload = function() {
+  showTrips();
+};
+function loadGoaSelection(){
+  document.getElementById("mainContent").innerHTML = `
+    <div class="selection-container">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60"
+           alt="Goa Beach" class="trip-banner" />
+      <div class="trip-title">Goa Trip</div>
+      <button class="accordion">Days / Nights</button>
+      <div class="panel">
+        <ul>
+          <li data-price="0">2 Nights / 3 Days</li>
+          <li data-price="0">3 Nights / 4 Days</li>
+          <li data-price="0">4 Nights / 5 Days</li>
+        </ul>
+      </div>
+      <button class="accordion">Transportation</button>
+      <div class="panel">
+        <ul>
+          <li class="toggle-sublist">Airport Transfers</li>
+          <ul class="sublist">
+            <li data-price="1200" data-category="Transportation">Airport Pick & Drop</li>
+          </ul>
+          <li class="toggle-sublist">Local Transport</li>
+          <ul class="sublist">
+            <li data-price="1800" data-category="Transportation">Local Sightseeing Cab</li>
+          </ul>
+          <li class="toggle-sublist">Bus / Train</li>
+          <ul class="sublist">
+            <li data-price="1000" data-category="Transportation">Train / Bus Transfer</li>
+          </ul>
+        </ul>
+      </div>
+      <button class="accordion">Hotel</button>
+      <div class="panel">
+        <ul>
+          <li class="hotel-option" data-price="2500" data-type="standard">Standard Room</li>
+          <li class="hotel-option" data-price="3500" data-type="deluxe">Deluxe Room</li>
+          <li class="hotel-option" data-price="5000" data-type="suite">Suite Room</li>
+          <li class="hotel-option" data-price="6000" data-type="resort">Resort</li>
+        </ul>
+        <div id="hotelDetails" class="sub-section">
+          <img id="hotelImg" src="" alt="Hotel Room" style="display:none;">
+          <h4 id="hotelTitle">Hotel Details</h4>
+          <p id="hotelDesc"></p>
+        </div>
+      </div>
+      <button class="accordion">Sightseeing</button>
+      <div class="panel">
+        <ul>
+          <li class="toggle-sublist">North Goa Tour</li>
+          <ul class="sublist">
+            <li data-price="0" data-category="North Goa">Fort Aguada</li>
+            <li data-price="0" data-category="North Goa">Saligao Church</li>
+            <li data-price="0" data-category="North Goa">Sinquirim Beach</li>
+            <li data-price="0" data-category="North Goa">Baga Beach</li>
+            <li data-price="0" data-category="North Goa">Old Goa Church</li>
+            <li data-price="0" data-category="North Goa">Anjuna Beach</li>
+            <li data-price="0" data-category="North Goa">Vagator Beach</li>
+            <li data-price="0" data-category="North Goa">Aguada</li>
+          </ul>
+          <li class="toggle-sublist">South Goa Tour</li>
+          <ul class="sublist">
+            <li data-price="0" data-category="South Goa">Miramar Beach</li>
+            <li data-price="0" data-category="South Goa">Tirupathi Balaji Temple</li>
+            <li data-price="0" data-category="South Goa">Se Cathedral Church</li>
+            <li data-price="0" data-category="South Goa">Old Goa Church</li>
+            <li data-price="0" data-category="South Goa">Dolphin Sightseeing</li>
+            <li data-price="0" data-category="South Goa">Mangeshi Temple</li>
+            <li data-price="0" data-category="South Goa">Boat Cruise at Mandovi River</li>
+          </ul>
+          <li class="toggle-sublist">Grand Island</li>
+          <ul class="sublist">
+            <li class="toggle-sublist">Activities</li>
+            <ul class="sublist">
+              <li data-price="1200" data-category="Grand Island">Scuba Diving</li>
+              <li data-price="700" data-category="Grand Island">Jet Ski</li>
+              <li data-price="500" data-category="Grand Island">Banana Boat</li>
+              <li data-price="800" data-category="Grand Island">Bumper Ride</li>
+              <li data-price="600" data-category="Grand Island">Snorkeling</li>
+              <li data-price="600" data-category="Grand Island">Parasailing</li>
+              <li data-price="1500" data-category="Grand Island">Speed Boat Ride</li>
+            </ul>
+          </ul>
+        </ul>
+      </div>
+      <button class="accordion">Water Sports</button>
+      <div class="panel">
+        <ul>
+          <li data-price="600" data-category="Water Sports">Parasailing</li>
+          <li data-price="500" data-category="Water Sports">Banana Ride</li>
+          <li data-price="700" data-category="Water Sports">Jet Ski</li>
+          <li data-price="800" data-category="Water Sports">Bumper Ride</li>
+          <li data-price="1500" data-category="Water Sports">Speed Boat Ride</li>
+          <li data-price="600" data-category="Water Sports">Scuba Diving</li>
+          <li data-price="600" data-category="Water Sports">Snorkeling</li>
+        </ul>
+      </div>
+      <div class="summary-box">
+        <h4>Selected Items:</h4>
+        <div id="selectedItems">None</div>
+      </div>
+      <div class="total" id="totalAmount">Grand Total: ₹0</div>
+      <div class="button-group">
+        <a href="#" id="previewBtn" class="btn-preview">🔍 Preview</a>
+      </div>
+    </div>
+  `;
 
-  function toggleCategory(id){
-    allCategories.forEach(cat => {
-      cat.style.display = (cat.id === id) ? (cat.style.display==='block'?'none':'block') : 'none';
-    });
-  }
-
-  document.querySelectorAll('.sub-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const name = item.dataset.name;
-      const cost = parseInt(item.dataset.cost);
-      const existing = selectedItems.find(i => i.name === name);
-
-      if(existing){
-        selectedItems = selectedItems.filter(i => i.name !== name);
-        item.style.background = '#e6f4ff';
-      } else {
-        selectedItems.push({name, cost});
-        item.style.background = '#cde8ff';
-      }
-      updateSelectedItems();
-    });
-  });
-
-  function updateSelectedItems(){
-    selectedItemsList.innerHTML = '';
-    let total = 0;
-    selectedItems.forEach(i => {
-      total += i.cost;
-      const li = document.createElement('li');
-      li.textContent = `${i.name} – ₹${i.cost}`;
-      selectedItemsList.appendChild(li);
-    });
-    totalBox.textContent = `Grand Total: ₹${total}`;
-  }
-
-  printBtn.addEventListener('click', () => {
-    if(selectedItems.length===0){
-      alert("No items selected for trip!");
-      return;
+  const hotelDetailsMap = {
+    standard: {
+      img:"https://images.unsplash.com/photo-1600585154356-596af9009e88?auto=format&fit=crop&w=800&q=60",
+      title:"Standard Room",
+      desc:"A comfortable standard room offering basic amenities, A/C, Wi-Fi, and complimentary breakfast. Ideal for budget-conscious travelers."
+    },
+    deluxe: {
+      img:"https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=60",
+      title:"Deluxe Room",
+      desc:"Deluxe rooms feature additional space, modern furnishings, premium linen, a work desk, and a balcony with garden or pool view."
+    },
+    suite: {
+      img:"https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=60",
+      title:"Suite Room",
+      desc:"Spacious suite with separate living area, king-size bed, luxury bath, mini bar, and panoramic views. Perfect for luxury stays."
+    },
+    resort: {
+      img:"https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60",
+      title:"Resort Room",
+      desc:"All-access resort stay with private beach, large pool, spa, multiple dining options, and every comfort you need for a relaxing getaway."
     }
+  };
 
-    // Populate print area
-    printItems.innerHTML = '';
-    let total = 0;
-    selectedItems.forEach(i => {
-      total += i.cost;
-      const li = document.createElement('li');
-      li.textContent = `${i.name} – ₹${i.cost}`;
-      printItems.appendChild(li);
+  setTimeout(function(){
+    const acc = document.getElementsByClassName("accordion");
+    for(let i=0; i<acc.length; i++) {
+      acc[i].addEventListener("click", function(){
+        for(let j=0; j<acc.length; j++) {
+          if(j !== i) {
+            acc[j].classList.remove("active");
+            acc[j].nextElementSibling.classList.remove("show");
+          }
+        }
+        this.classList.toggle("active");
+        this.nextElementSibling.classList.toggle("show");
+      });
+    }
+    document.querySelectorAll(".panel > ul > li.toggle-sublist").forEach(title => {
+      title.addEventListener("click", () => {
+        document.querySelectorAll(".panel > ul > li.toggle-sublist + ul.sublist.show").forEach(openList => {
+          if(openList !== title.nextElementSibling) {
+            openList.classList.remove("show");
+          }
+        });
+        if(title.nextElementSibling){
+          title.nextElementSibling.classList.toggle("show");
+        }
+      });
     });
-    printTotal.textContent = `Grand Total: ₹${total}`;
+    document.querySelectorAll(".sublist > li.toggle-sublist").forEach(title => {
+      title.addEventListener("click", () => {
+        if(title.nextElementSibling){
+          title.nextElementSibling.classList.toggle("show");
+        }
+      });
+    });
 
-    printArea.style.display = 'block';
-    window.print();
-    printArea.style.display = 'none';
-  });
+    const items = document.querySelectorAll(".panel li[data-price]");
+    const selectedDiv = document.getElementById("selectedItems");
+    const totalDiv = document.getElementById("totalAmount");
+    const hotelDetailsDiv = document.getElementById("hotelDetails");
+    const hotelImg = document.getElementById("hotelImg");
+    const hotelTitle = document.getElementById("hotelTitle");
+    const hotelDesc = document.getElementById("hotelDesc");
+
+    let selectedItems = [];
+    let total = 0;
+    function updateSummary() {
+      const categories = {};
+      selectedItems.forEach(i => {
+        if(i.name === "Resort Stay") return;
+        if(!categories[i.category]) categories[i.category] = [];
+        categories[i.category].push(i);
+      });
+      let html = "";
+      Object.keys(categories).forEach(cat => {
+        html += `<div class="summary-category">${cat}</div>`;
+        categories[cat].forEach(i => {
+          html += `<div class="summary-item">${i.price > 0 ? `${i.name} (₹${i.price})` : i.name}</div>`;
+        });
+      });
+      selectedDiv.innerHTML = html || "None";
+      totalDiv.textContent = `Grand Total: ₹${total}`;
+    }
+    items.forEach(item => {
+      item.addEventListener("click", e => {
+        e.stopPropagation();
+        const itemName = item.textContent;
+        if(itemName === "Resort Stay") return;
+        const itemPrice = parseInt(item.getAttribute("data-price"));
+        const isHotel = item.classList.contains("hotel-option");
+        const hotelType = isHotel ? item.getAttribute("data-type") : null;
+        const itemCategory = item.getAttribute("data-category") || "Others";
+        if(item.classList.contains("selected")){
+          item.classList.remove("selected");
+          selectedItems = selectedItems.filter(i => i.name !== itemName);
+          total -= itemPrice;
+          if(isHotel){
+            const anySelected = Array.from(document.querySelectorAll('.hotel-option.selected')).length > 0;
+            if(!anySelected) hotelDetailsDiv.style.display = "none";
+          }
+        } else {
+          if(isHotel){
+            document.querySelectorAll('.hotel-option.selected').forEach(sel => sel.classList.remove('selected'));
+            selectedItems = selectedItems.filter(i => !i.type || i.type !== hotelType);
+          }
+          item.classList.add("selected");
+          if(isHotel) selectedItems = selectedItems.filter(i => !i.type || i.type !== hotelType);
+          selectedItems.push({name: itemName, price: itemPrice, type: hotelType, category: itemCategory});
+          total += itemPrice;
+          if(isHotel && hotelType && hotelDetailsMap[hotelType]){
+            hotelImg.src = hotelDetailsMap[hotelType].img;
+            hotelImg.style.display = "block";
+            hotelTitle.textContent = hotelDetailsMap[hotelType].title + " Details";
+            hotelDesc.textContent = hotelDetailsMap[hotelType].desc;
+            hotelDetailsDiv.style.display = "block";
+          }
+        }
+        if(isHotel && !item.classList.contains("selected")){
+          const activeHotel = document.querySelector('.hotel-option.selected');
+          if(activeHotel && activeHotel.getAttribute("data-type") && hotelDetailsMap[activeHotel.getAttribute("data-type")]){
+            const actType = activeHotel.getAttribute("data-type");
+            hotelImg.src = hotelDetailsMap[actType].img;
+            hotelTitle.textContent = hotelDetailsMap[actType].title + " Details";
+            hotelDesc.textContent = hotelDetailsMap[actType].desc;
+            hotelDetailsDiv.style.display = "block";
+          } else {
+            hotelDetailsDiv.style.display = "none";
+          }
+        }
+        updateSummary();
+      });
+    });
+    // Only Preview Button Functionality -- Print code removed
+    document.getElementById("previewBtn").addEventListener("click", e => {
+      e.preventDefault();
+      const summary = document.getElementById("selectedItems").innerHTML;
+      const total = document.getElementById("totalAmount").innerText;
+      const previewWindow = window.open('', '', 'width=900,height=1200');
+      previewWindow.document.write(`
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TT World - Trip Costs</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fff;
+    }
+  .download-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    transition: background 0.3s ease;
+    z-index: 9999; /* 👈 add this line */
+  }
+  .download-btn:hover {
+    background: #0056b3;
+  }
+    .top-header {
+      background: #181e39;
+      color: #fff;
+      padding: 35px 0 20px 0;
+      position: relative;
+      text-align: center;
+    }
+    .top-header .brand {
+      font-size: 2.4rem;
+      font-weight: bold;
+      color: #ffe128;
+      letter-spacing: 2px;
+      display: block;
+    }
+    .top-header .subtitle {
+      color: #ffe128;
+      font-size: 1.1rem;
+      margin-top: 6px;
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+      font-style: italic;
+    }
+    .top-header .section-icons {
+      margin-bottom: 15px;
+    }
+    .top-header .section-icons span {
+      background: #ffe128;
+      color: #222;
+      border-radius: 6px;
+      margin: 0 10px;
+      padding: 6px 16px;
+      font-size: 1rem;
+      font-weight: 500;
+      display: inline-block;
+    }
+    .top-header .contacts {
+      font-size: 1rem;
+      margin: 10px 0 0 0;
+      color: #fff;
+    }
+    .top-header .contacts span {
+      margin: 0 20px;
+    }
+    .top-header .address {
+      margin-top: 7px;
+      font-size: 0.92rem;
+      color: #cfcfcf;
+    }
+    .yellow-bar {
+      width: 100%;
+      background: #ffe128;
+      padding: 18px 0;
+      text-align: center;
+      margin: 0;
+    }
+    .yellow-bar span {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #222;
+      letter-spacing: 2px;
+    }
+    .body-content {
+      display: flex;
+      min-height: 700px;
+      background: #fff;
+      position: relative;
+      padding-bottom: 50px;
+    }
+    .side-bar {
+      background: #ffe128;
+      width: 34px;
+      min-height: 630px;
+      display: block;
+    }
+    .main-content {
+      flex: 1;
+      padding: 40px 60px 0 60px;
+      min-height: 700px;
+      background: #fff;
+      position: relative;
+      z-index: 1;
+    }
+    .watermark {
+      position: absolute;
+      left: 30%;
+      top: 40%;
+      font-size: 5vw;
+      color: #dfdfdf;
+      opacity: 0.3;
+      font-weight: bold;
+      transform: rotate(-24deg);
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+    .selected-list {
+      z-index: 2;
+      position: relative;
+    }
+    .selected-list h3 {
+      margin-bottom: 15px;
+      font-size: 1.25rem;
+      color: #007acc;
+      text-align: left;
+    }
+    .selected-list table {
+      width: 90%;
+      border-collapse: collapse;
+      margin: 0 auto 24px auto;
+      font-size: 1.07rem;
+    }
+    .selected-list th, .selected-list td {
+      padding: 9px 12px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+    .selected-list th {
+      background: #f4f4f4;
+      color: #222;
+      font-size: 1.06rem;
+      font-weight: bold;
+      border-bottom: 2px solid #ffe128;
+    }
+    .total-row {
+      font-weight: bold;
+      color: #111;
+      font-size: 1.12rem;
+      text-align: right;
+      border-top: 2px solid #ffe128;
+      padding-top: 11px;
+    }
+    .footer {
+      margin-top: 60px;
+      text-align: center;
+      color: #111;
+    }
+    .footer .quote {
+      font-size: 1.08rem;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    .footer .credit {
+      font-size: 1rem;
+      padding-top: 7px;
+    }
+    @media print {
+      .btn-preview, .btn-print { display: none; }
+    }
+  </style>
+</head>
+<body>
+<button class="download-btn" onclick="downloadPDF()">Download PDF</button>
+<div class="top-header">
+  <span class="brand">TT World</span>
+  <div class="subtitle">Trip to the world</div>
+  <div class="section-icons">
+    <span>Tour Packages</span>
+    <span>Flight Booking</span>
+    <span>Train Booking</span>
+    <span>Visa Services</span>
+  </div>
+  <div class="contacts">
+    <span>www.triptotheworld.in</span> | 
+    <span>+91 72000 87875</span> | 
+    <span>soundarraj@triptotheworld.in</span>
+  </div>
+  <div class="address">13/1, Arni Road, Kosapet, Vellore</div>
+</div>
+<div class="yellow-bar">
+  <span>TRIP COSTS</span>
+</div>
+<div class="body-content">
+  <div class="side-bar"></div>
+  <div class="main-content">
+    <div class="watermark">TT World</div>
+    <div class="selected-list">
+      <h3>Selected Items</h3>
+      ${
+        (function() {
+          let html = "";
+          if(summary.trim() === "" || summary.trim() === "None") {
+            html += "<p>No items selected.</p>";
+          } else {
+            const div = document.createElement('div');
+            div.innerHTML = summary;
+            let rows = [];
+            let currentCat = '';
+            Array.from(div.childNodes).forEach(node => {
+              if (node.classList && node.classList.contains('summary-category')) {
+                currentCat = node.innerText;
+              } else if (node.classList && node.classList.contains('summary-item')) {
+                let [name, price] = node.innerText.split(' (₹');
+                price = price ? "₹" + price.replace(")", "") : "-";
+                rows.push({category: currentCat, name: name, price: price});
+              }
+            });
+            if(rows.length > 0) {
+              html += '<table><tr><th>Category</th><th>Item</th><th>Price</th></tr>';
+              rows.forEach(row => {
+                html += `<tr><td>${row.category || ''}</td><td>${row.name || ''}</td><td>${row.price || '-'}</td></tr>`;
+              });
+              html += '</table>';
+            } else {
+              html += summary;
+            }
+          }
+          return html;
+        })()
+      }
+      <div class="total-row">${total}</div>
+    </div>
+  </div>
+</div>
+<div class="footer">
+  <div class="quote">Travel far to find yourself</div>
+  <div class="credit">TT World</div>
+</div>
+ <script>
+  function downloadPDF() {
+    const element = document.body;
+    const btn = document.querySelector(".download-btn");
+    btn.style.display = "none"; // 👈 hide before capture
+
+    const opt = {
+      margin: 0.5,
+      filename: "TT-World-Trip.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+    };
+
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+    script.onload = () =>
+      html2pdf()
+        .from(element)
+        .set(opt)
+        .save()
+        .then(() => {
+          btn.style.display = "block"; // 👈 show again after download
+        });
+
+    document.body.appendChild(script);
+  }
+<\/script>
+      `);
+      previewWindow.document.close();
+    });
+  }, 10);
+}
 </script>
-
 </body>
 </html>
