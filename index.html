@@ -49,7 +49,7 @@
   .popup h3 { margin-top: 0; color: #003a78; border-bottom: 2px solid #007acc; padding-bottom: 5px; }
   .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1500; }
   .overlay.active { display: block; }
-  .selection-container { max-width: 500px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden;}
+  .selection-container { max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); overflow: hidden;}
   .trip-banner { width: 100%; height: 220px; border-radius: 12px 12px 0 0; object-fit: cover; }
   .trip-title { text-align: center; background: #007acc; color: white; padding: 12px; font-size: 1.4rem; font-weight: 600; }
   .accordion { background-color: #007acc; color: #fff; cursor: pointer; padding: 14px 20px; width: 100%; text-align: left; border: none; outline: none; transition: 0.3s; font-weight: 500; border-radius: 8px; margin-top: 10px; display: flex; align-items: center; justify-content: space-between;}
@@ -57,35 +57,216 @@
   .accordion:after { content: '\25BC'; transition: transform 0.3s; }
   .accordion.active:after { transform: rotate(180deg); }
   .panel { background: #f1f8ff; border-radius: 0 0 8px 8px; overflow: hidden; padding: 0 20px; max-height: 0; transition: max-height 0.3s ease-out; }
-  .panel.show { max-height: 1000px; transition: max-height 0.5s ease-in; }
+  .panel.show { max-height: 2000px; transition: max-height 0.5s ease-in; }
   .panel ul { list-style: none; margin: 10px 0; padding: 0; }
-  .panel li { padding: 8px 0; border-bottom: 1px solid #ddd; cursor: pointer; }
+  .panel li { padding: 8px 0; border-bottom: 1px solid #ddd; cursor: pointer; user-select: none; }
   .panel li:hover { background-color: #e6f2ff; }
-  .panel li.selected { background-color: #007acc; color: white; font-weight: 600; }
+  .panel > ul > li.selected { background-color: #007acc; color: white !important; font-weight: 600; }
   .sublist { margin-left: 20px; padding: 10px; border-radius: 8px; background-color: #e0f2ff; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
   .sublist.show { max-height: 1500px; transition: max-height 0.5s ease-in; }
   .sub-section { display: none; background: #fff; border-radius: 10px; margin: 10px 0; padding: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);}
   .sub-section img { width: 100%; border-radius: 8px; margin-bottom: 8px;}
   .sub-section h4 { margin: 10px 0 5px; color: #007acc;}
-  .summary-box { background: #fff; border-top: 2px solid #007acc; padding: 15px; margin-top: 10px;}
+  .summary-box { background: #fff; border-top: 2px solid #007acc; padding: 15px; margin-top: 10px; min-height: 48px;}
   .summary-box h4 { margin: 0 0 8px 0; color: #007acc;}
-  #selectedItems { font-size: 0.95rem; color: #333; min-height: 24px;}
+  #selectedItems { font-size: 0.95rem; color: #333; min-height: 24px; white-space: pre-wrap;}
   .summary-category { font-weight: bold; margin-top: 8px;}
-  .summary-item { margin-left: 10px;}
+  .summary-item { margin-left: 10px; cursor: pointer; }
+  .summary-item:hover { text-decoration: underline; }
   .total { text-align: right; font-weight: 600; color: #333; padding: 8px 15px; border-top: 1px solid #ddd;}
   .button-group { display: flex; justify-content: space-between; margin: 10px 15px; }
   .btn-preview { flex: 1; padding: 12px; font-weight: bold; border-radius: 8px; color: white; text-align: center; cursor: pointer; user-select: none; text-decoration: none; background: #007acc; margin-right: 10px;}
   .btn-preview:hover { background: #005f99; }
-  /* .btn-print { background: #28a745; } (removed green print style and related) */
-  /* .btn-print:hover { background: #218838; } */
   .panel > ul > li.toggle-sublist { font-weight: 700; color: #007acc; cursor: pointer;}
+  /* Inputs for pax counts */
+  .pax-inputs {
+    margin: 10px 0 15px 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    font-weight: 600;
+  }
+  .pax-inputs label {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    color: #003a78;
+  }
+  .pax-inputs input[type=number] {
+    margin-top: 4px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 80px;
+    font-size: 1rem;
+  }
+  .pax-inputs input[type=number]:focus {
+    outline-color: #007acc;
+    border-color: #007acc;
+  }
+  .slider-arrow {
+    color: #808080;
+    font-size: 1em;
+    cursor: pointer;
+    background: white;
+    padding: 6px 12px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+  .slider-arrow.left { left: -18px; }
+  .slider-arrow.right { right: -18px; }
+  
+  /* Day Planner Styles */
+  .day-planner {
+    margin: 15px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  .day-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  .day-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+  }
+  .day-title {
+    font-weight: 600;
+    color: #007acc;
+    font-size: 1.1rem;
+  }
+  .day-activities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    min-height: 40px;
+    padding: 8px;
+    background: #f9f9f9;
+    border-radius: 6px;
+  }
+  .activity-tag {
+    background: #e0f2ff;
+    color: #003a78;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .activity-tag .remove {
+    cursor: pointer;
+    font-weight: bold;
+    color: #ff5252;
+  }
+  .day-drop-zone {
+    border: 2px dashed #007acc;
+    border-radius: 6px;
+    padding: 15px;
+    text-align: center;
+    color: #007acc;
+    margin-top: 10px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .day-drop-zone.drag-over {
+    background: #e0f2ff;
+  }
+  .activity-item {
+    padding: 8px 12px;
+    margin: 5px;
+    background: #f1f8ff;
+    border: 1px solid #007acc;
+    border-radius: 6px;
+    cursor: grab;
+    display: inline-block;
+  }
+  .activity-item:active {
+    cursor: grabbing;
+  }
+  .day-tabs {
+    display: flex;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
+  }
+  .day-tab {
+    padding: 10px 15px;
+    background: #f1f8ff;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    margin-right: 5px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .day-tab.active {
+    background: #007acc;
+    color: white;
+    border-color: #007acc;
+  }
+  .day-content {
+    display: none;
+  }
+  .day-content.active {
+    display: block;
+  }
+  .activity-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  .activity-option {
+    padding: 8px 12px;
+    background: #f1f8ff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .activity-option:hover {
+    background: #e0f2ff;
+    border-color: #007acc;
+  }
+  .activity-option.selected {
+    background: #007acc;
+    color: white;
+    border-color: #007acc;
+  }
+  .add-activity-btn {
+    background: #007acc;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .add-activity-btn:hover {
+    background: #005fa3;
+  }
 </style>
 </head>
 <body>
 <header class="tt-header">
   <div class="logo-section">
     <button class="hamburger" onclick="toggleSidebar()">☰</button>
-    <img src="./logo.png" alt="TT World Logo" class="logo" />
+    <img src="https://i.ibb.co/6PJCfFk/logo.png" alt="TT World Logo" class="logo" />
     <h1 class="site-title">TT WORLD</h1>
   </div>
 </header>
@@ -100,34 +281,79 @@
   <p><b>Main Office:</b><br>13/1, Arni Road, Vellore, 632001</p>
   <p>📞 +91 95665 96825<br>📞 +91 72000 87875</p>
   <p><b>Email:</b> info@triptotheworld.in</p>
-  <p><b>🌐 Website:</b> <a href="https://www.triptotheworld.in" target="_blank">www.triptotheworld.in</a></p>
+  <p><b>🌐 Website:</b> <a href="https://www.triptotheworld.in" target="_blank" rel="noopener noreferrer">www.triptotheworld.in</a></p>
   <button onclick="closeContact()">Close</button>
 </div>
 <div class="main" id="mainContent">
   <h2>Welcome to TT World 🌍</h2>
-  <p>Select a section from the sidebar to get started.</p>
+  <p>Select a section from sidebar to get started.</p>
 </div>
 <script>
-function toggleSidebar(){ document.getElementById("sidebar").classList.toggle("active"); }
-function showHome(){
-  document.getElementById("mainContent").innerHTML = "<h2>Welcome to TT World 🌍</h2><p>Discover amazing trips!</p>";
-  document.getElementById("sidebar").classList.remove("active");
-}
-function openContact(){
-  document.getElementById("contactPopup").classList.add("active");
-  document.getElementById("overlay").classList.add("active");
-  document.getElementById("sidebar").classList.remove("active");
-}
-function closeContact(){
-  document.getElementById("contactPopup").classList.remove("active");
-  document.getElementById("overlay").classList.remove("active");
-}
-function showTrips(){
+// --- GLOBAL VARIABLES & STATE ---
+let selectedItems = [];
+let totalAmount = 0;
+let daysSelected = 3;
+let nightsSelected = 2;
+let adultCount = 1;
+let childCount = 0;
+let currentHotelType = "deluxe";
+let currentHotelImageSlide = 0;
+let currentHotelDetailSlide = 0;
+let currentFoodType = "veg";
+let currentFoodImageSlide = 0;
+let dayItinerary = {}; // Store activities by day
+
+// --- PRICING & DATA CONSTANTS ---
+const PRICES = {
+  hotelPerNight: { standard: 1200, deluxe: 1800, suite: 2500, resort: 3500 },
+  transportation: { airportTransferCar: 1200, sicTransfer: 500, rentalCarDriver: 800, rentalBike: 500, rentalCar: 500 },
+  sightseeingPackage: { northGoa: 1500, southGoa: 1600, grandIsland: 2500 },
+  waterSportsPackage: { all: 2500, dinnerCruise: 1200 }
+};
+const FOOD_PRICES = { veg: 300, nonveg: 500, breakfast: 150, snacks: 200 };
+
+const hotelImages = {
+  standard: ["https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=60", "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=60"],
+  deluxe: ["https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=60", "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&q=60"],
+  suite: ["https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=60", "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=800&q=60"],
+  resort: ["https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60", "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=800&q=60"]
+};
+
+const foodImages = {
+  veg: ["https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=800&q=60", "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=800&q=60"],
+  nonveg: ["https://images.unsplash.com/photo-1546833999-b9f581a1996d?auto=format&fit=crop&w=800&q=60", "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=60"],
+  breakfast: ["https://images.unsplash.com/photo-1525351324368-75db6c727f97?auto=format&fit=crop&w=800&q=60", "https://images.unsplash.com/photo-1534422298391-e4f8c6dd34e1?auto=format&fit=crop&w=800&q=60"],
+  snacks: ["https://images.unsplash.com/photo-1563243379-5f591a6e4a9a?auto=format&fit=crop&w=800&q=60", "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=800&q=60"]
+};
+
+const hotelDetailsMap = {
+  standard: { img: hotelImages.standard[0], title: "Standard Room", desc: "A comfortable standard room offering basic amenities, A/C, Wi-Fi, and complimentary breakfast. Ideal for budget-conscious travelers.", location: "Central Panaji, near bus station" },
+  deluxe: { img: hotelImages.deluxe[0], title: "Deluxe Room", desc: "Deluxe rooms feature additional space, modern furnishings, premium linen, a work desk, and a balcony with garden or pool view.", location: "Close to Baga Beach and local markets" },
+  suite: { img: hotelImages.suite[0], title: "Suite Room", desc: "Spacious suite with separate living area, king-size bed, luxury bath, mini bar, and panoramic views. Perfect for luxury stays.", location: "Prime resort strip, sunset sea views" },
+  resort: { img: hotelImages.resort[0], title: "Resort Room", desc: "All-access resort stay with private beach, large pool, spa, multiple dining options, and every comfort you need for a relaxing getaway.", location: "Exclusive stretch in South Goa" }
+};
+
+const foodDetailsMap = {
+  veg: { title: "Vegetarian Meals", desc: "Delicious vegetarian options with local Goan flavors. Includes rice, dal, vegetables, and salad." },
+  nonveg: { title: "Non-Vegetarian Meals", desc: "Savory non-vegetarian dishes featuring Goan seafood specialties and meat curries." },
+  breakfast: { title: "Breakfast", desc: "Start your day with a hearty breakfast including tea/coffee, fruits, and local specialties." },
+  snacks: { title: "Snacks", desc: "Light snacks and beverages to keep you energized during your sightseeing tours." }
+};
+
+// --- CORE UTILITY FUNCTIONS ---
+function formatPrice(val) { return `₹${val.toLocaleString('en-IN')}`; }
+function toggleSidebar() { document.getElementById("sidebar").classList.toggle("active"); }
+function showHome() { document.getElementById("mainContent").innerHTML = "<h2>Welcome to TT World 🌍</h2><p>Discover amazing trips!</p>"; document.getElementById("sidebar").classList.remove("active"); }
+function openContact() { document.getElementById("contactPopup").classList.add("active"); document.getElementById("overlay").classList.add("active"); document.getElementById("sidebar").classList.remove("active"); }
+function closeContact() { document.getElementById("contactPopup").classList.remove("active"); document.getElementById("overlay").classList.remove("active"); }
+
+// --- TRIP LOADING & DYNAMIC CONTENT ---
+function showTrips() {
   document.getElementById("mainContent").innerHTML = `
     <h2>Explore Our Tour Packages ✈️</h2>
     <div class='trip-section'>
       <div class='trip-card'>
-        <img src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e' alt='Goa Beach'/>
+        <img src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60' alt='Goa Beach'/>
         <div class='trip-info'>
           <h4>Goa Beach Getaway</h4>
           <p>Enjoy sunny beaches, nightlife, and heritage.</p>
@@ -138,89 +364,63 @@ function showTrips(){
   `;
   document.getElementById("sidebar").classList.remove("active");
 }
-window.onload = function() {
-  showTrips();
-};
-function loadGoaSelection(){
+
+function loadGoaSelection() {
   document.getElementById("mainContent").innerHTML = `
-    <div class="selection-container">
-      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60"
-           alt="Goa Beach" class="trip-banner" />
+    <div class="selection-container" id="selectionContainer">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60" alt="Goa Beach" class="trip-banner" />
       <div class="trip-title">Goa Trip</div>
       <button class="accordion">Days / Nights</button>
+      <div class="panel"><ul id="daysList"><li data-days="3" data-nights="2">2 Nights / 3 Days</li><li data-days="4" data-nights="3">3 Nights / 4 Days</li><li data-days="5" data-nights="4">4 Nights / 5 Days</li></ul></div>
+      <button class="accordion">Passengers</button>
       <div class="panel">
-        <ul>
-          <li data-price="0">2 Nights / 3 Days</li>
-          <li data-price="0">3 Nights / 4 Days</li>
-          <li data-price="0">4 Nights / 5 Days</li>
-        </ul>
+        <div class="pax-inputs" id="paxInputs">
+          <label for="adultCount">Adults (₹800/person/day): <input type="number" id="adultCount" min="1" value="1" /></label>
+          <label for="childCount">Children (₹400/person/day): <input type="number" id="childCount" min="0" value="0" /></label>
+        </div>
+      </div>
+      <button class="accordion">Day Planner</button>
+      <div class="panel">
+        <div id="dayPlannerContainer">
+          <p>Select your trip duration and passengers first to plan your days.</p>
+        </div>
       </div>
       <button class="accordion">Transportation</button>
       <div class="panel">
         <ul>
-          <li class="toggle-sublist">Airport Transfers</li>
-          <ul class="sublist">
-            <li data-price="1200" data-category="Transportation">Airport Pick & Drop</li>
-          </ul>
-          <li class="toggle-sublist">Local Transport</li>
-          <ul class="sublist">
-            <li data-price="1800" data-category="Transportation">Local Sightseeing Cab</li>
-          </ul>
-          <li class="toggle-sublist">Bus / Train</li>
-          <ul class="sublist">
-            <li data-price="1000" data-category="Transportation">Train / Bus Transfer</li>
-          </ul>
+          <li class="transport-option" data-key="airportTransferCar" data-base-price="1200" data-category="Transportation" data-per-day="false"><span class="item-name">Airport transfer Car</span><span class="item-price" style="margin-left: 20px;">₹1200</span></li>
+          <li class="transport-option" data-key="sicTransfer" data-base-price="500" data-category="Transportation" data-per-day="false"><span class="item-name">SIC basis transfer</span><span class="item-price" style="margin-left:20px;">₹500</span></li>
+          <li class="transport-option" data-key="rentalCarDriver" data-base-price="800" data-category="Transportation" data-per-day="true"><span class="item-name">Rental car with driver</span><span class="item-price" style="margin-left:20px;">₹0</span></li>
+          <li class="transport-option" data-key="rentalBike" data-base-price="500" data-category="Transportation" data-per-day="true"><span class="item-name">Rental bike</span><span class="item-price" style="margin-left:20px;">₹0</span></li>
+          <li class="transport-option" data-key="rentalCar" data-base-price="500" data-category="Transportation" data-per-day="true"><span class="item-name">Rental car</span><span class="item-price" style="margin-left:20px;">₹0</span></li>
         </ul>
       </div>
       <button class="accordion">Hotel</button>
       <div class="panel">
         <ul>
-          <li class="hotel-option" data-price="2500" data-type="standard">Standard Room</li>
-          <li class="hotel-option" data-price="3500" data-type="deluxe">Deluxe Room</li>
-          <li class="hotel-option" data-price="5000" data-type="suite">Suite Room</li>
-          <li class="hotel-option" data-price="6000" data-type="resort">Resort</li>
+          <li class="hotel-option" data-price="1200" data-type="standard" data-category="Hotel"><span class="item-name">Standard Room</span><span class="item-price" style="margin-left: 20px;">₹0</span></li>
+          <li class="hotel-option" data-price="1800" data-type="deluxe" data-category="Hotel"><span class="item-name">Deluxe Room</span><span class="item-price" style="margin-left: 20px;">₹0</span></li>
+          <li class="hotel-option" data-price="2500" data-type="suite" data-category="Hotel"><span class="item-name">Suite Room</span><span class="item-price" style="margin-left: 20px;">₹0</span></li>
+          <li class="hotel-option" data-price="3500" data-type="resort" data-category="Hotel"><span class="item-name">Resort</span><span class="item-price" style="margin-left: 20px;">₹0</span></li>
         </ul>
-        <div id="hotelDetails" class="sub-section">
-          <img id="hotelImg" src="" alt="Hotel Room" style="display:none;">
-          <h4 id="hotelTitle">Hotel Details</h4>
-          <p id="hotelDesc"></p>
-        </div>
+        <div id="hotelDetails" class="sub-section" style="text-align:center; margin-top:10px; display:none;"></div>
       </div>
       <button class="accordion">Sightseeing</button>
       <div class="panel">
         <ul>
-          <li class="toggle-sublist">North Goa Tour</li>
+          <li class="toggle-sublist" data-category="Sightseeing" data-package="northGoa"><span class="item-name">North Goa Tour</span><span class="item-price" style="margin-left:20px;"></span></li>
           <ul class="sublist">
-            <li data-price="0" data-category="North Goa">Fort Aguada</li>
-            <li data-price="0" data-category="North Goa">Saligao Church</li>
-            <li data-price="0" data-category="North Goa">Sinquirim Beach</li>
-            <li data-price="0" data-category="North Goa">Baga Beach</li>
-            <li data-price="0" data-category="North Goa">Old Goa Church</li>
-            <li data-price="0" data-category="North Goa">Anjuna Beach</li>
-            <li data-price="0" data-category="North Goa">Vagator Beach</li>
-            <li data-price="0" data-category="North Goa">Aguada</li>
+            <li>Fort Aguada</li><li>Saligao Church</li><li>Sinquirim Beach</li><li>Baga Beach</li><li>Old Goa Church</li><li>Anjuna Beach</li><li>Vagator Beach</li><li>Aguada</li>
           </ul>
-          <li class="toggle-sublist">South Goa Tour</li>
+          <li class="toggle-sublist" data-category="Sightseeing" data-package="southGoa"><span class="item-name">South Goa Tour</span><span class="item-price" style="margin-left:20px;"></span></li>
           <ul class="sublist">
-            <li data-price="0" data-category="South Goa">Miramar Beach</li>
-            <li data-price="0" data-category="South Goa">Tirupathi Balaji Temple</li>
-            <li data-price="0" data-category="South Goa">Se Cathedral Church</li>
-            <li data-price="0" data-category="South Goa">Old Goa Church</li>
-            <li data-price="0" data-category="South Goa">Dolphin Sightseeing</li>
-            <li data-price="0" data-category="South Goa">Mangeshi Temple</li>
-            <li data-price="0" data-category="South Goa">Boat Cruise at Mandovi River</li>
+            <li>Miramar Beach</li><li>Tirupathi Balaji Temple</li><li>Se Cathedral Church</li><li>Old Goa Church</li><li>Dolphin Sightseeing</li><li>Mangeshi Temple</li><li>Boat Cruise at Mandovi River</li>
           </ul>
-          <li class="toggle-sublist">Grand Island</li>
+          <li class="toggle-sublist" data-category="Sightseeing" data-package="grandIsland"><span class="item-name">Grand Island</span><span class="item-price" style="margin-left:20px;"></span></li>
           <ul class="sublist">
             <li class="toggle-sublist">Activities</li>
             <ul class="sublist">
-              <li data-price="1200" data-category="Grand Island">Scuba Diving</li>
-              <li data-price="700" data-category="Grand Island">Jet Ski</li>
-              <li data-price="500" data-category="Grand Island">Banana Boat</li>
-              <li data-price="800" data-category="Grand Island">Bumper Ride</li>
-              <li data-price="600" data-category="Grand Island">Snorkeling</li>
-              <li data-price="600" data-category="Grand Island">Parasailing</li>
-              <li data-price="1500" data-category="Grand Island">Speed Boat Ride</li>
+              <li>Scuba Diving</li><li>Jet Ski</li><li>Banana Boat</li><li>Bumper Ride</li><li>Snorkeling</li><li>Parasailing</li><li>Speed Boat Ride</li>
             </ul>
           </ul>
         </ul>
@@ -228,446 +428,590 @@ function loadGoaSelection(){
       <button class="accordion">Water Sports</button>
       <div class="panel">
         <ul>
-          <li data-price="600" data-category="Water Sports">Parasailing</li>
-          <li data-price="500" data-category="Water Sports">Banana Ride</li>
-          <li data-price="700" data-category="Water Sports">Jet Ski</li>
-          <li data-price="800" data-category="Water Sports">Bumper Ride</li>
-          <li data-price="1500" data-category="Water Sports">Speed Boat Ride</li>
-          <li data-price="600" data-category="Water Sports">Scuba Diving</li>
-          <li data-price="600" data-category="Water Sports">Snorkeling</li>
+          <li class="toggle-sublist" data-category="Water Sports" data-package="all"><span class="item-name">All Water Sports Package</span><span class="item-price" style="margin-left:20px;"></span></li>
+          <ul class="sublist">
+            <li>Parasailing</li><li>Banana Ride</li><li>Jet Ski</li><li>Bumper Ride</li><li>Speed Boat Ride</li><li>Scuba Diving</li><li>Snorkeling</li>
+          </ul>
+          <li class="toggle-sublist" data-category="Water Sports" data-package="dinnerCruise"><span class="item-name">Dinner Cruise</span><span class="item-price" style="margin-left:20px;"></span></li>
         </ul>
       </div>
-      <div class="summary-box">
-        <h4>Selected Items:</h4>
-        <div id="selectedItems">None</div>
+      <button class="accordion">Food</button>
+      <div class="panel">
+        <ul>
+          <li class="food-option" data-price="300" data-type="veg" data-category="Food"><span class="item-name">Veg Meal</span> <span class="item-price" style="margin-left:20px;"></span></li>
+          <li class="food-option" data-price="500" data-type="nonveg" data-category="Food"><span class="item-name">Non-Veg Meal</span> <span class="item-price" style="margin-left:20px;"></span></li>
+          <li class="food-option" data-price="150" data-type="breakfast" data-category="Food"><span class="item-name">Breakfast</span> <span class="item-price" style="margin-left:20px;"></span></li>
+          <li class="food-option" data-price="200" data-type="snacks" data-category="Food"><span class="item-name">Snacks</span> <span class="item-price" style="margin-left:20px;"></span></li>
+        </ul>
+        <div id="foodDetails" class="sub-section" style="display:none;"></div>
       </div>
+      <div class="summary-box"><h4>Selected Items:</h4><div id="selectedItems">None</div></div>
       <div class="total" id="totalAmount">Grand Total: ₹0</div>
-      <div class="button-group">
-        <a href="#" id="previewBtn" class="btn-preview">🔍 Preview</a>
-      </div>
+      <div class="button-group"><a href="#" id="previewBtn" class="btn-preview">🔍 Preview</a></div>
     </div>
   `;
+  initializeEventListeners();
+}
 
-  const hotelDetailsMap = {
-    standard: {
-      img:"https://images.unsplash.com/photo-1600585154356-596af9009e88?auto=format&fit=crop&w=800&q=60",
-      title:"Standard Room",
-      desc:"A comfortable standard room offering basic amenities, A/C, Wi-Fi, and complimentary breakfast. Ideal for budget-conscious travelers."
-    },
-    deluxe: {
-      img:"https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=60",
-      title:"Deluxe Room",
-      desc:"Deluxe rooms feature additional space, modern furnishings, premium linen, a work desk, and a balcony with garden or pool view."
-    },
-    suite: {
-      img:"https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=800&q=60",
-      title:"Suite Room",
-      desc:"Spacious suite with separate living area, king-size bed, luxury bath, mini bar, and panoramic views. Perfect for luxury stays."
-    },
-    resort: {
-      img:"https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=60",
-      title:"Resort Room",
-      desc:"All-access resort stay with private beach, large pool, spa, multiple dining options, and every comfort you need for a relaxing getaway."
+// --- EVENT HANDLING & LOGIC ---
+function initializeEventListeners() {
+  const acc = document.getElementsByClassName("accordion");
+  for (let i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      for (let j = 0; j < acc.length; j++) { if (j !== i) { acc[j].classList.remove("active"); acc[j].nextElementSibling.classList.remove("show"); } }
+      this.classList.toggle("active"); this.nextElementSibling.classList.toggle("show");
+    });
+  }
+
+  document.querySelectorAll(".panel li.toggle-sublist").forEach(title => {
+    title.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const siblingList = title.nextElementSibling;
+      if (siblingList && siblingList.classList.contains('sublist')) {
+        siblingList.classList.toggle("show");
+      }
+    });
+  });
+
+  document.querySelectorAll("#daysList li").forEach(dayLi => { dayLi.addEventListener("click", () => onDaysSelected(dayLi)); });
+  const defaultDaysLi = document.querySelector("#daysList li");
+  if (defaultDaysLi) onDaysSelected(defaultDaysLi);
+
+  document.getElementById("adultCount").addEventListener("input", onPaxChanged);
+  document.getElementById("childCount").addEventListener("input", onPaxChanged);
+
+  document.querySelectorAll(".panel li[data-price]").forEach(item => {
+    if (item.closest("#daysList")) return;
+    item.addEventListener("click", e => { e.stopPropagation(); handleItemClick(item); });
+  });
+
+  const previewBtn = document.getElementById("previewBtn");
+  if (previewBtn) {
+    previewBtn.addEventListener("click", (e) => { e.preventDefault(); generatePreview(); });
+  }
+}
+
+function onDaysSelected(li) {
+  daysSelected = parseInt(li.dataset.days); nightsSelected = parseInt(li.dataset.nights);
+  document.querySelectorAll("#daysList li").forEach(d => d.classList.remove("selected"));
+  li.classList.add("selected");
+  clearSelectionsExceptDaysAndPax();
+  initializeDayPlanner();
+  updateDynamicPrices();
+  updateSummary();
+}
+
+function onPaxChanged() {
+  const adultInput = document.getElementById("adultCount");
+  const childInput = document.getElementById("childCount");
+  adultCount = Math.max(1, parseInt(adultInput.value) || 1);
+  childCount = Math.max(0, parseInt(childInput.value) || 0);
+  adultInput.value = adultCount; childInput.value = childCount;
+  updateDynamicPrices();
+  updateSummary();
+}
+
+// Initialize the day planner
+function initializeDayPlanner() {
+  // Initialize dayItinerary object
+  dayItinerary = {};
+  for (let i = 1; i <= daysSelected; i++) {
+    dayItinerary[`day${i}`] = [];
+  }
+  
+  // Create day planner UI
+  let dayPlannerHTML = '<div class="day-tabs">';
+  for (let i = 1; i <= daysSelected; i++) {
+    dayPlannerHTML += `<div class="day-tab ${i === 1 ? 'active' : ''}" onclick="showDay(${i})">Day ${i}</div>`;
+  }
+  dayPlannerHTML += '</div>';
+  
+  dayPlannerHTML += '<div class="day-contents">';
+  for (let i = 1; i <= daysSelected; i++) {
+    dayPlannerHTML += `
+      <div class="day-content ${i === 1 ? 'active' : ''}" id="day${i}Content">
+        <h4>Activities for Day ${i}</h4>
+        <div class="day-activities" id="day${i}Activities">
+          <p class="empty-message">No activities planned for this day yet.</p>
+        </div>
+        <div class="activity-selector">
+          <div class="activity-option" onclick="addActivityToDay(${i}, 'northGoa')">North Goa Tour</div>
+          <div class="activity-option" onclick="addActivityToDay(${i}, 'southGoa')">South Goa Tour</div>
+          <div class="activity-option" onclick="addActivityToDay(${i}, 'grandIsland')">Grand Island</div>
+          <div class="activity-option" onclick="addActivityToDay(${i}, 'waterSports')">Water Sports</div>
+          <div class="activity-option" onclick="addActivityToDay(${i}, 'dinnerCruise')">Dinner Cruise</div>
+          <div class="activity-option" onclick="addActivityToDay(${i}, 'beachTime')">Beach Time</div>
+          <div class="activity-option" onclick="addActivityToDay(${i}, 'localMarket')">Local Market</div>
+          <div class="activity-option" onclick="addActivityToDay(${i}, 'nightlife')">Nightlife</div>
+          <div class="activity-option" onclick="addActivityToDay(${i}, 'relaxation')">Relaxation</div>
+        </div>
+      </div>
+    `;
+  }
+  dayPlannerHTML += '</div>';
+  
+  document.getElementById("dayPlannerContainer").innerHTML = dayPlannerHTML;
+}
+
+// Show a specific day in the planner
+function showDay(dayNumber) {
+  // Update tabs
+  document.querySelectorAll('.day-tab').forEach((tab, index) => {
+    if (index + 1 === dayNumber) {
+      tab.classList.add('active');
+    } else {
+      tab.classList.remove('active');
     }
+  });
+  
+  // Update content
+  document.querySelectorAll('.day-content').forEach(content => {
+    content.classList.remove('active');
+  });
+  document.getElementById(`day${dayNumber}Content`).classList.add('active');
+}
+
+// Add an activity to a specific day
+function addActivityToDay(dayNumber, activityType) {
+  const dayKey = `day${dayNumber}`;
+  
+  // Check if activity already exists for this day
+  if (dayItinerary[dayKey].includes(activityType)) {
+    return; // Activity already added
+  }
+  
+  // Add activity to the day
+  dayItinerary[dayKey].push(activityType);
+  
+  // Update UI
+  updateDayActivitiesUI(dayNumber);
+  
+  // Update selected items and pricing
+  updateSelectedItemsFromDayPlanner();
+  updateSummary();
+}
+
+// Remove an activity from a specific day
+function removeActivityFromDay(dayNumber, activityType) {
+  const dayKey = `day${dayNumber}`;
+  
+  // Remove activity from the day
+  dayItinerary[dayKey] = dayItinerary[dayKey].filter(activity => activity !== activityType);
+  
+  // Update UI
+  updateDayActivitiesUI(dayNumber);
+  
+  // Update selected items and pricing
+  updateSelectedItemsFromDayPlanner();
+  updateSummary();
+}
+
+// Update the UI for activities on a specific day
+function updateDayActivitiesUI(dayNumber) {
+  const dayKey = `day${dayNumber}`;
+  const activitiesContainer = document.getElementById(`day${dayNumber}Activities`);
+  
+  if (dayItinerary[dayKey].length === 0) {
+    activitiesContainer.innerHTML = '<p class="empty-message">No activities planned for this day yet.</p>';
+    return;
+  }
+  
+  let activitiesHTML = '';
+  dayItinerary[dayKey].forEach(activity => {
+    const displayName = getActivityDisplayName(activity);
+    activitiesHTML += `
+      <div class="activity-tag">
+        ${displayName}
+        <span class="remove" onclick="removeActivityFromDay(${dayNumber}, '${activity}')">×</span>
+      </div>
+    `;
+  });
+  
+  activitiesContainer.innerHTML = activitiesHTML;
+}
+
+// Get display name for activity type
+function getActivityDisplayName(activityType) {
+  const activityNames = {
+    'northGoa': 'North Goa Tour',
+    'southGoa': 'South Goa Tour',
+    'grandIsland': 'Grand Island',
+    'waterSports': 'Water Sports',
+    'dinnerCruise': 'Dinner Cruise',
+    'beachTime': 'Beach Time',
+    'localMarket': 'Local Market',
+    'nightlife': 'Nightlife',
+    'relaxation': 'Relaxation'
   };
+  
+  return activityNames[activityType] || activityType;
+}
 
-  setTimeout(function(){
-    const acc = document.getElementsByClassName("accordion");
-    for(let i=0; i<acc.length; i++) {
-      acc[i].addEventListener("click", function(){
-        for(let j=0; j<acc.length; j++) {
-          if(j !== i) {
-            acc[j].classList.remove("active");
-            acc[j].nextElementSibling.classList.remove("show");
-          }
-        }
-        this.classList.toggle("active");
-        this.nextElementSibling.classList.toggle("show");
+// Update selected items based on day planner
+function updateSelectedItemsFromDayPlanner() {
+  // Remove all sightseeing and water sports items
+  selectedItems = selectedItems.filter(item => 
+    item.category !== "Sightseeing" && item.category !== "Water Sports"
+  );
+  
+  // Count each activity type across all days
+  const activityCounts = {};
+  
+  for (const dayKey in dayItinerary) {
+    dayItinerary[dayKey].forEach(activity => {
+      if (!activityCounts[activity]) {
+        activityCounts[activity] = 0;
+      }
+      activityCounts[activity]++;
+    });
+  }
+  
+  // Add items to selectedItems based on activity counts
+  for (const activity in activityCounts) {
+    if (activity === 'northGoa' || activity === 'southGoa' || activity === 'grandIsland') {
+      const price = PRICES.sightseeingPackage[activity] * (adultCount + (childCount * 0.5));
+      selectedItems.push({
+        name: getActivityDisplayName(activity),
+        price: Math.round(price),
+        category: "Sightseeing",
+        type: activity
+      });
+    } else if (activity === 'waterSports') {
+      const price = PRICES.waterSportsPackage.all * (adultCount + (childCount * 0.5));
+      selectedItems.push({
+        name: "All Water Sports Package",
+        price: Math.round(price),
+        category: "Water Sports",
+        type: activity
+      });
+    } else if (activity === 'dinnerCruise') {
+      const price = PRICES.waterSportsPackage.dinnerCruise * (adultCount + (childCount * 0.5));
+      selectedItems.push({
+        name: "Dinner Cruise",
+        price: Math.round(price),
+        category: "Water Sports",
+        type: activity
       });
     }
-    document.querySelectorAll(".panel > ul > li.toggle-sublist").forEach(title => {
-      title.addEventListener("click", () => {
-        document.querySelectorAll(".panel > ul > li.toggle-sublist + ul.sublist.show").forEach(openList => {
-          if(openList !== title.nextElementSibling) {
-            openList.classList.remove("show");
-          }
-        });
-        if(title.nextElementSibling){
-          title.nextElementSibling.classList.toggle("show");
-        }
-      });
-    });
-    document.querySelectorAll(".sublist > li.toggle-sublist").forEach(title => {
-      title.addEventListener("click", () => {
-        if(title.nextElementSibling){
-          title.nextElementSibling.classList.toggle("show");
-        }
-      });
-    });
+  }
+}
 
-    const items = document.querySelectorAll(".panel li[data-price]");
-    const selectedDiv = document.getElementById("selectedItems");
-    const totalDiv = document.getElementById("totalAmount");
-    const hotelDetailsDiv = document.getElementById("hotelDetails");
-    const hotelImg = document.getElementById("hotelImg");
-    const hotelTitle = document.getElementById("hotelTitle");
-    const hotelDesc = document.getElementById("hotelDesc");
+function handleItemClick(item) {
+  if (!item || !item.hasAttribute("data-price")) return;
+  
+  const nameSpan = item.querySelector('.item-name');
+  const itemName = nameSpan ? nameSpan.textContent.trim() : item.textContent.trim();
+  
+  const itemPrice = Number(item.getAttribute("data-price"));
+  const category = item.getAttribute("data-category") || "Others";
+  const isHotel = item.classList.contains("hotel-option");
+  const isTransport = item.classList.contains("transport-option");
+  const isFood = item.classList.contains("food-option");
+  const perDayTransport = isTransport && item.getAttribute("data-per-day") === "true";
+  const type = item.getAttribute("data-type") || item.getAttribute("data-package");
 
-    let selectedItems = [];
-    let total = 0;
-    function updateSummary() {
-      const categories = {};
-      selectedItems.forEach(i => {
-        if(i.name === "Resort Stay") return;
-        if(!categories[i.category]) categories[i.category] = [];
-        categories[i.category].push(i);
-      });
-      let html = "";
-      Object.keys(categories).forEach(cat => {
-        html += `<div class="summary-category">${cat}</div>`;
-        categories[cat].forEach(i => {
-          html += `<div class="summary-item">${i.price > 0 ? `${i.name} (₹${i.price})` : i.name}</div>`;
-        });
-      });
-      selectedDiv.innerHTML = html || "None";
-      totalDiv.textContent = `Grand Total: ₹${total}`;
+  if (item.classList.contains("selected")) {
+    item.classList.remove("selected");
+    selectedItems = selectedItems.filter(i => i.name !== itemName);
+    if (isHotel) document.getElementById("hotelDetails").style.display = "none";
+    if (isFood) document.getElementById("foodDetails").style.display = "none";
+  } else {
+    if (isHotel) { 
+      document.querySelectorAll('.hotel-option.selected').forEach(el => el.classList.remove('selected')); 
+      selectedItems = selectedItems.filter(i => i.category !== "Hotel"); 
     }
-    items.forEach(item => {
-      item.addEventListener("click", e => {
-        e.stopPropagation();
-        const itemName = item.textContent;
-        if(itemName === "Resort Stay") return;
-        const itemPrice = parseInt(item.getAttribute("data-price"));
-        const isHotel = item.classList.contains("hotel-option");
-        const hotelType = isHotel ? item.getAttribute("data-type") : null;
-        const itemCategory = item.getAttribute("data-category") || "Others";
-        if(item.classList.contains("selected")){
-          item.classList.remove("selected");
-          selectedItems = selectedItems.filter(i => i.name !== itemName);
-          total -= itemPrice;
-          if(isHotel){
-            const anySelected = Array.from(document.querySelectorAll('.hotel-option.selected')).length > 0;
-            if(!anySelected) hotelDetailsDiv.style.display = "none";
-          }
-        } else {
-          if(isHotel){
-            document.querySelectorAll('.hotel-option.selected').forEach(sel => sel.classList.remove('selected'));
-            selectedItems = selectedItems.filter(i => !i.type || i.type !== hotelType);
-          }
-          item.classList.add("selected");
-          if(isHotel) selectedItems = selectedItems.filter(i => !i.type || i.type !== hotelType);
-          selectedItems.push({name: itemName, price: itemPrice, type: hotelType, category: itemCategory});
-          total += itemPrice;
-          if(isHotel && hotelType && hotelDetailsMap[hotelType]){
-            hotelImg.src = hotelDetailsMap[hotelType].img;
-            hotelImg.style.display = "block";
-            hotelTitle.textContent = hotelDetailsMap[hotelType].title + " Details";
-            hotelDesc.textContent = hotelDetailsMap[hotelType].desc;
-            hotelDetailsDiv.style.display = "block";
-          }
-        }
-        if(isHotel && !item.classList.contains("selected")){
-          const activeHotel = document.querySelector('.hotel-option.selected');
-          if(activeHotel && activeHotel.getAttribute("data-type") && hotelDetailsMap[activeHotel.getAttribute("data-type")]){
-            const actType = activeHotel.getAttribute("data-type");
-            hotelImg.src = hotelDetailsMap[actType].img;
-            hotelTitle.textContent = hotelDetailsMap[actType].title + " Details";
-            hotelDesc.textContent = hotelDetailsMap[actType].desc;
-            hotelDetailsDiv.style.display = "block";
-          } else {
-            hotelDetailsDiv.style.display = "none";
-          }
-        }
-        updateSummary();
-      });
+    
+    // Removed the single selection restriction for Water Sports
+    // This allows both Dinner Cruise and All Water Sports Package to be selected
+    
+    item.classList.add("selected");
+    selectedItems = selectedItems.filter(i => i.name !== itemName);
+    selectedItems.push({ name: itemName, price: itemPrice, category: category, perDay: perDayTransport, type: type });
+  }
+
+  if (isHotel) showHotelDetails(type);
+  if (isFood) showFoodDetails(type);
+  updateSummary();
+}
+
+// --- DYNAMIC UI UPDATES ---
+function updateDynamicPrices() {
+  const EXTRA_ADULT_PER_NIGHT = 800; const CHILD_PER_NIGHT = 400;
+  document.querySelectorAll(".hotel-option").forEach(el => {
+    const type = el.getAttribute("data-type");
+    if (type && PRICES.hotelPerNight[type]) {
+      const baseRoomPrice = PRICES.hotelPerNight[type] * nightsSelected;
+      const extraAdults = Math.max(adultCount - 1, 0);
+      const extraAdultsCharge = extraAdults * EXTRA_ADULT_PER_NIGHT * nightsSelected;
+      const childrenCharge = childCount * CHILD_PER_NIGHT * nightsSelected;
+      const totalPrice = baseRoomPrice + extraAdultsCharge + childrenCharge;
+      el.setAttribute("data-price", totalPrice); el.querySelector(".item-price").textContent = formatPrice(totalPrice);
+    }
+  });
+
+  document.querySelectorAll(".transport-option").forEach(el => {
+    const perDay = el.getAttribute("data-per-day") === "true";
+    const basePrice = Number(el.getAttribute("data-base-price"));
+    let price = perDay ? (basePrice * adultCount + Math.floor(basePrice / 2) * childCount) * daysSelected : basePrice;
+    el.setAttribute("data-price", price); el.querySelector(".item-price").textContent = formatPrice(price);
+  });
+
+  document.querySelectorAll('[data-category="Sightseeing"]').forEach(el => {
+    const packageKey = el.getAttribute('data-package');
+    if (packageKey && PRICES.sightseeingPackage[packageKey]) {
+      const price = PRICES.sightseeingPackage[packageKey] * (adultCount + (childCount * 0.5));
+      el.setAttribute("data-price", Math.round(price));
+      el.querySelector(".item-price").textContent = formatPrice(Math.round(price));
+    }
+  });
+
+  document.querySelectorAll('[data-category="Water Sports"]').forEach(el => {
+    const packageKey = el.getAttribute('data-package');
+    if (packageKey && PRICES.waterSportsPackage[packageKey]) {
+      const price = PRICES.waterSportsPackage[packageKey] * (adultCount + (childCount * 0.5));
+      el.setAttribute("data-price", Math.round(price));
+      el.querySelector(".item-price").textContent = formatPrice(Math.round(price));
+    }
+  });
+
+  document.querySelectorAll(".food-option").forEach(el => {
+    const foodType = el.getAttribute("data-type");
+    if (foodType && FOOD_PRICES[foodType]) {
+      const totalPrice = calculateFoodTotal(foodType, adultCount, childCount, daysSelected);
+      el.setAttribute("data-price", totalPrice); el.querySelector(".item-price").textContent = formatPrice(totalPrice);
+    }
+  });
+}
+
+function updateSummary() {
+  if (selectedItems.length === 0) {
+    document.getElementById("selectedItems").innerHTML = "None";
+    document.getElementById("totalAmount").textContent = "Grand Total: ₹0"; totalAmount = 0; return;
+  }
+  const categories = {}; totalAmount = 0;
+  selectedItems.forEach(item => { if (!categories[item.category]) categories[item.category] = []; categories[item.category].push(item); });
+  let html = "";
+  
+  // Add day-by-day itinerary to summary
+  if (Object.keys(dayItinerary).length > 0) {
+    html += `<div class="summary-category">Day-by-Day Itinerary</div>`;
+    for (let i = 1; i <= daysSelected; i++) {
+      const dayKey = `day${i}`;
+      if (dayItinerary[dayKey] && dayItinerary[dayKey].length > 0) {
+        html += `<div class="summary-item">Day ${i}: `;
+        dayItinerary[dayKey].forEach((activity, index) => {
+          html += getActivityDisplayName(activity);
+          if (index < dayItinerary[dayKey].length - 1) html += ", ";
+        });
+        html += `</div>`;
+      }
+    }
+  }
+  
+  for (const category in categories) {
+    html += `<div class="summary-category">${category}</div>`;
+    categories[category].forEach(item => {
+      let line = `${item.name} (${formatPrice(item.price)})`;
+      // Only show duration for Hotel and Food (not for Sightseeing, Transportation, and Water Sports)
+      if (category === "Hotel") line += ` for ${nightsSelected} nights`;
+      else if (category === "Food") line += ` for ${daysSelected} days`;
+      html += `<div class="summary-item" data-category="${item.category}" data-type="${item.type}">${line}</div>`;
+      totalAmount += item.price;
     });
-    // Only Preview Button Functionality -- Print code removed
-    document.getElementById("previewBtn").addEventListener("click", e => {
-      e.preventDefault();
-      const summary = document.getElementById("selectedItems").innerHTML;
-      const total = document.getElementById("totalAmount").innerText;
-      const previewWindow = window.open('', '', 'width=900,height=1200');
-      previewWindow.document.write(`
+  }
+  document.getElementById("selectedItems").innerHTML = html;
+  document.getElementById("totalAmount").textContent = `Grand Total: ${formatPrice(totalAmount)}`;
+
+  document.querySelectorAll('.summary-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const category = item.dataset.category;
+      const type = item.dataset.type;
+      if (category === 'Hotel') showHotelDetails(type);
+      if (category === 'Food') showFoodDetails(type);
+      if (category === 'Transportation' || category === 'Sightseeing' || category === 'Water Sports') {
+        const accordion = [...document.querySelectorAll('.accordion')].find(acc => acc.textContent.toLowerCase().includes(category.toLowerCase()));
+        if (accordion) {
+          accordion.click();
+          accordion.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+    });
+  });
+}
+
+function clearSelectionsExceptDaysAndPax() {
+  document.querySelectorAll('.panel li.selected').forEach(el => { if (!el.closest("#daysList")) el.classList.remove('selected'); });
+  selectedItems = [];
+  dayItinerary = {};
+}
+
+// --- DETAIL DISPLAY FUNCTIONS ---
+function showHotelDetails(hotelType) {
+  const detailsDiv = document.getElementById("hotelDetails");
+  if (!hotelDetailsMap[hotelType]) return;
+  currentHotelType = hotelType; currentHotelImageSlide = 0; currentHotelDetailSlide = 0;
+  detailsDiv.style.display = "block";
+  detailsDiv.innerHTML = `
+    <div class="hotel-image-slider" style="position:relative;">
+      <span class="slider-arrow left" onclick="prevHotelImageSlide()">&lt;</span>
+      <img id="hotelImg" src="${hotelImages[hotelType][0]}" style="width:100%;border-radius:8px;display:block;margin-bottom:8px;">
+      <span class="slider-arrow right" onclick="nextHotelImageSlide()">&gt;</span>
+    </div>
+    <div class="hotel-details-slider" style="position:relative;margin-top:4px;">
+      <span class="slider-arrow left" onclick="prevHotelDetailSlide()">&lt;</span>
+      <div id="hotelDetailSlideContent"></div>
+      <span class="slider-arrow right" onclick="nextHotelDetailSlide()">&gt;</span>
+    </div>
+  `;
+  renderHotelDetailSlide();
+}
+
+function renderHotelDetailSlide() {
+  const data = hotelDetailsMap[currentHotelType];
+  let html = currentHotelDetailSlide === 0
+    ? `<h4 style="color:#003a78;">${data.title} Details</h4><p>${data.desc}</p>`
+    : `<h4 style="color:#003a78;">Location</h4><p>${data.location}</p>`;
+  document.getElementById("hotelDetailSlideContent").innerHTML = html;
+}
+
+function prevHotelImageSlide() { const images = hotelImages[currentHotelType] || []; if (images.length === 0) return; currentHotelImageSlide = (currentHotelImageSlide - 1 + images.length) % images.length; document.getElementById("hotelImg").src = images[currentHotelImageSlide]; }
+function nextHotelImageSlide() { const images = hotelImages[currentHotelType] || []; if (images.length === 0) return; currentHotelImageSlide = (currentHotelImageSlide + 1) % images.length; document.getElementById("hotelImg").src = images[currentHotelImageSlide]; }
+function prevHotelDetailSlide() { currentHotelDetailSlide = (currentHotelDetailSlide === 0) ? 1 : 0; renderHotelDetailSlide(); }
+function nextHotelDetailSlide() { currentHotelDetailSlide = (currentHotelDetailSlide === 1) ? 0 : 1; renderHotelDetailSlide(); }
+
+function showFoodDetails(foodType) {
+  const detailsDiv = document.getElementById("foodDetails");
+  if (!foodDetailsMap[foodType]) return;
+  currentFoodType = foodType; currentFoodImageSlide = 0;
+  detailsDiv.style.display = "block";
+  detailsDiv.innerHTML = `
+    <div class="food-image-slider" style="position:relative;">
+      <span class="slider-arrow left" onclick="prevFoodImageSlide()">&lt;</span>
+      <img id="foodImg" src="${foodImages[foodType][0]}" style="width:100%;border-radius:8px;display:block;margin-bottom:8px;">
+      <span class="slider-arrow right" onclick="nextFoodImageSlide()">&gt;</span>
+    </div>
+    <h4 id="foodTitle">${foodDetailsMap[foodType].title}</h4>
+    <p id="foodDesc">${foodDetailsMap[foodType].desc}</p>
+  `;
+}
+
+function prevFoodImageSlide() { const images = foodImages[currentFoodType] || []; if (images.length === 0) return; currentFoodImageSlide = (currentFoodImageSlide - 1 + images.length) % images.length; document.getElementById("foodImg").src = images[currentFoodImageSlide]; }
+function nextFoodImageSlide() { const images = foodImages[currentFoodType] || []; if (images.length === 0) return; currentFoodImageSlide = (currentFoodImageSlide + 1) % images.length; document.getElementById("foodImg").src = images[currentFoodImageSlide]; }
+
+function calculateFoodTotal(foodType, adults, children, days) {
+  const basePrice = FOOD_PRICES[foodType] || 0;
+  const childPrice = basePrice * 0.5;
+  return Math.round((basePrice * adults + childPrice * children) * days);
+}
+
+// --- PREVIEW GENERATION ---
+function generatePreview() {
+  const summaryHTML = document.getElementById("selectedItems").innerHTML;
+  const totalText = document.getElementById("totalAmount").innerText;
+  const previewWindow = window.open('', '', 'width=900,height=1200');
+
+  let tableRows = '';
+  let itineraryHTML = '';
+  
+  // Generate day-by-day itinerary
+  if (Object.keys(dayItinerary).length > 0) {
+    itineraryHTML = '<h3>Day-by-Day Itinerary</h3><div class="itinerary-container">';
+    for (let i = 1; i <= daysSelected; i++) {
+      const dayKey = `day${i}`;
+      itineraryHTML += `<div class="day-summary"><h4>Day ${i}</h4><ul>`;
+      if (dayItinerary[dayKey] && dayItinerary[dayKey].length > 0) {
+        dayItinerary[dayKey].forEach(activity => {
+          itineraryHTML += `<li>${getActivityDisplayName(activity)}</li>`;
+        });
+      } else {
+        itineraryHTML += `<li>No activities planned</li>`;
+      }
+      itineraryHTML += '</ul></div>';
+    }
+    itineraryHTML += '</div>';
+  }
+  
+  if (summaryHTML.trim() === "" || summaryHTML.trim() === "None") {
+    tableRows = "<p>No items selected.</p>";
+  } else {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = summaryHTML;
+    let rows = [];
+    let currentCat = '';
+    let skipDayByDay = false;
+    
+    tempDiv.childNodes.forEach(node => {
+      if (node.classList && node.classList.contains('summary-category')) {
+        currentCat = node.innerText;
+        // Skip if this is the Day-by-Day Itinerary category
+        skipDayByDay = (currentCat === "Day-by-Day Itinerary");
+      } else if (node.classList && node.classList.contains('summary-item')) {
+        // Skip items if we're in the Day-by-Day Itinerary section
+        if (skipDayByDay) return;
+        
+        let nameText = node.innerText;
+        let [name, price] = nameText.split(' (₹');
+        price = price ? "₹" + price.replace(")", "") : "-";
+        rows.push({category: currentCat, name: name, price: price});
+      }
+    });
+    
+    if(rows.length > 0) {
+      tableRows = '<table><thead><tr><th>Category</th><th>Item</th><th>Price</th></tr></thead><tbody>';
+      rows.forEach(row => {
+        tableRows += `<tr><td>${row.category || ''}</td><td>${row.name || ''}</td><td>${row.price || '-'}</td></tr>`;
+      });
+      tableRows += '</tbody></table>';
+    }
+  }
+
+  previewWindow.document.write(`
 <!DOCTYPE html>
 <html>
 <head>
-  <title>TT World - Trip Costs</title>
-  <style>
-    body {
-      font-family: "Poppins", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #fff;
-    }
-  .download-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    transition: background 0.3s ease;
-    z-index: 9999; /* 👈 add this line */
-  }
-  .download-btn:hover {
-    background: #0056b3;
-  }
-    .top-header {
-      background: #181e39;
-      color: #fff;
-      padding: 35px 0 20px 0;
-      position: relative;
-      text-align: center;
-    }
-    .top-header .brand {
-      font-size: 2.4rem;
-      font-weight: bold;
-      color: #ffe128;
-      letter-spacing: 2px;
-      display: block;
-    }
-    .top-header .subtitle {
-      color: #ffe128;
-      font-size: 1.1rem;
-      margin-top: 6px;
-      margin-bottom: 30px;
-      letter-spacing: 1px;
-      font-style: italic;
-    }
-    .top-header .section-icons {
-      margin-bottom: 15px;
-    }
-    .top-header .section-icons span {
-      background: #ffe128;
-      color: #222;
-      border-radius: 6px;
-      margin: 0 10px;
-      padding: 6px 16px;
-      font-size: 1rem;
-      font-weight: 500;
-      display: inline-block;
-    }
-    .top-header .contacts {
-      font-size: 1rem;
-      margin: 10px 0 0 0;
-      color: #fff;
-    }
-    .top-header .contacts span {
-      margin: 0 20px;
-    }
-    .top-header .address {
-      margin-top: 7px;
-      font-size: 0.92rem;
-      color: #cfcfcf;
-    }
-    .yellow-bar {
-      width: 100%;
-      background: #ffe128;
-      padding: 18px 0;
-      text-align: center;
-      margin: 0;
-    }
-    .yellow-bar span {
-      font-size: 2rem;
-      font-weight: bold;
-      color: #222;
-      letter-spacing: 2px;
-    }
-    .body-content {
-      display: flex;
-      min-height: 700px;
-      background: #fff;
-      position: relative;
-      padding-bottom: 50px;
-    }
-    .side-bar {
-      background: #ffe128;
-      width: 34px;
-      min-height: 630px;
-      display: block;
-    }
-    .main-content {
-      flex: 1;
-      padding: 40px 60px 0 60px;
-      min-height: 700px;
-      background: #fff;
-      position: relative;
-      z-index: 1;
-    }
-    .watermark {
-      position: absolute;
-      left: 30%;
-      top: 40%;
-      font-size: 5vw;
-      color: #dfdfdf;
-      opacity: 0.3;
-      font-weight: bold;
-      transform: rotate(-24deg);
-      pointer-events: none;
-      user-select: none;
-      z-index: 0;
-    }
-    .selected-list {
-      z-index: 2;
-      position: relative;
-    }
-    .selected-list h3 {
-      margin-bottom: 15px;
-      font-size: 1.25rem;
-      color: #007acc;
-      text-align: left;
-    }
-    .selected-list table {
-      width: 90%;
-      border-collapse: collapse;
-      margin: 0 auto 24px auto;
-      font-size: 1.07rem;
-    }
-    .selected-list th, .selected-list td {
-      padding: 9px 12px;
-      border-bottom: 1px solid #eee;
-      text-align: left;
-    }
-    .selected-list th {
-      background: #f4f4f4;
-      color: #222;
-      font-size: 1.06rem;
-      font-weight: bold;
-      border-bottom: 2px solid #ffe128;
-    }
-    .total-row {
-      font-weight: bold;
-      color: #111;
-      font-size: 1.12rem;
-      text-align: right;
-      border-top: 2px solid #ffe128;
-      padding-top: 11px;
-    }
-    .footer {
-      margin-top: 60px;
-      text-align: center;
-      color: #111;
-    }
-    .footer .quote {
-      font-size: 1.08rem;
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-    .footer .credit {
-      font-size: 1rem;
-      padding-top: 7px;
-    }
-    @media print {
-      .btn-preview, .btn-print { display: none; }
-    }
-  </style>
+<title>TT World - Trip Costs</title><style>
+body{font-family:"Poppins",sans-serif;margin:0;padding:20px 40px;background:#fff;color:#222;line-height:1.4}
+.top-header{background:#181e39;color:#fff;padding:35px 0 20px 0;position:relative;text-align:center;margin-bottom:30px;border-radius:8px}
+.top-header .brand{font-size:2.4rem;font-weight:bold;color:#ffe128;letter-spacing:2px;display:block}
+.top-header .subtitle{color:#ffe128;font-size:1.1rem;margin-top:6px;margin-bottom:30px;letter-spacing:1px;font-style:italic}
+.top-header .section-icons{margin-bottom:15px}
+.top-header .section-icons span{background:#ffe128;color:#222;border-radius:6px;margin:0 10px;padding:6px 16px;font-size:1rem;font-weight:500;display:inline-block}
+.top-header .contacts{font-size:1rem;margin:10px 0 0 0;color:#fff}
+.top-header .contacts span{margin:0 20px}
+.top-header .address{margin-top:7px;font-size:0.92rem;color:#cfcfcf}
+.yellow-bar{width:100%;background:#ffe128;padding:18px 0;text-align:center;margin:0 0 20px 0;border-radius:8px}
+.yellow-bar span{font-size:2rem;font-weight:bold;color:#222;letter-spacing:2px}
+.selected-list{max-width:700px;margin:0 auto;border:2px solid #007acc;border-radius:10px;padding:20px;background:#f9faff}
+.selected-list h3{margin-bottom:15px;font-size:1.5rem;color:#007acc;text-align:center}
+.selected-list table{width:100%;border-collapse:collapse;font-size:1.1rem}
+.selected-list th,.selected-list td{padding:10px 12px;border-bottom:1px solid #ddd;text-align:left}
+.selected-list th{background:#e0e9f8;color:#222;font-weight:600;border-bottom:3px solid #007acc}
+.total-row{font-weight:bold;color:#111;font-size:1.3rem;text-align:right;border-top:3px solid #007acc;padding-top:15px}
+.footer{margin-top:60px;text-align:center;color:#111;font-size:1rem;font-weight:600}
+.itinerary-container{margin:20px 0}
+.day-summary{margin-bottom:15px;border:1px solid #ddd;border-radius:8px;padding:15px}
+.day-summary h4{color:#007acc;margin-top:0}
+.day-summary ul{padding-left:20px}
+</style>
 </head>
 <body>
-<button class="download-btn" onclick="downloadPDF()">Download PDF</button>
-<div class="top-header">
-  <span class="brand">TT World</span>
-  <div class="subtitle">Trip to the world</div>
-  <div class="section-icons">
-    <span>Tour Packages</span>
-    <span>Flight Booking</span>
-    <span>Train Booking</span>
-    <span>Visa Services</span>
+  <div class="top-header"><span class="brand">TT World</span><div class="subtitle">Trip to the world</div><div class="section-icons"><span>Tour Packages</span><span>Flight Booking</span><span>Train Booking</span><span>Visa Services</span></div><div class="contacts"><span>www.triptotheworld.in</span> | <span>+91 72000 87875</span> | <span>soundarraj@triptotheworld.in</span></div><div class="address">13/1, Arni Road, Kosapet, Vellore</div></div>
+  <div class="yellow-bar"><span>TRIP COSTS</span></div>
+  <div class="selected-list">
+    ${itineraryHTML}
+    <h3>Selected Items</h3>
+    ${tableRows}
+    <div class="total-row">${totalText}</div>
   </div>
-  <div class="contacts">
-    <span>www.triptotheworld.in</span> | 
-    <span>+91 72000 87875</span> | 
-    <span>soundarraj@triptotheworld.in</span>
+  <div class="footer">Travel far to find yourself — TT World
   </div>
-  <div class="address">13/1, Arni Road, Kosapet, Vellore</div>
-</div>
-<div class="yellow-bar">
-  <span>TRIP COSTS</span>
-</div>
-<div class="body-content">
-  <div class="side-bar"></div>
-  <div class="main-content">
-    <div class="watermark">TT World</div>
-    <div class="selected-list">
-      <h3>Selected Items</h3>
-      ${
-        (function() {
-          let html = "";
-          if(summary.trim() === "" || summary.trim() === "None") {
-            html += "<p>No items selected.</p>";
-          } else {
-            const div = document.createElement('div');
-            div.innerHTML = summary;
-            let rows = [];
-            let currentCat = '';
-            Array.from(div.childNodes).forEach(node => {
-              if (node.classList && node.classList.contains('summary-category')) {
-                currentCat = node.innerText;
-              } else if (node.classList && node.classList.contains('summary-item')) {
-                let [name, price] = node.innerText.split(' (₹');
-                price = price ? "₹" + price.replace(")", "") : "-";
-                rows.push({category: currentCat, name: name, price: price});
-              }
-            });
-            if(rows.length > 0) {
-              html += '<table><tr><th>Category</th><th>Item</th><th>Price</th></tr>';
-              rows.forEach(row => {
-                html += `<tr><td>${row.category || ''}</td><td>${row.name || ''}</td><td>${row.price || '-'}</td></tr>`;
-              });
-              html += '</table>';
-            } else {
-              html += summary;
-            }
-          }
-          return html;
-        })()
-      }
-      <div class="total-row">${total}</div>
-    </div>
-  </div>
-</div>
-<div class="footer">
-  <div class="quote">Travel far to find yourself</div>
-  <div class="credit">TT World</div>
-</div>
- <script>
-  function downloadPDF() {
-    const element = document.body;
-    const btn = document.querySelector(".download-btn");
-    btn.style.display = "none"; // 👈 hide before capture
-
-    const opt = {
-      margin: 0.5,
-      filename: "TT-World-Trip.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
-    };
-
-    const script = document.createElement("script");
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
-    script.onload = () =>
-      html2pdf()
-        .from(element)
-        .set(opt)
-        .save()
-        .then(() => {
-          btn.style.display = "block"; // 👈 show again after download
-        });
-
-    document.body.appendChild(script);
-  }
-<\/script>
-      `);
-      previewWindow.document.close();
-    });
-  }, 10);
-}
-</script>
 </body>
 </html>
+  `);
+  previewWindow.document.close();
+}
 
+window.onload = function() { showTrips(); };
+</script>   <!-- closes the JS tag only here -->
+</body>
+</html>
