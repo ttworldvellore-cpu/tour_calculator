@@ -78,31 +78,86 @@
   .btn-preview { flex: 1; padding: 12px; font-weight: bold; border-radius: 8px; color: white; text-align: center; cursor: pointer; user-select: none; text-decoration: none; background: #007acc; margin-right: 10px;}
   .btn-preview:hover { background: #005f99; }
   .panel > ul > li.toggle-sublist { font-weight: 700; color: #007acc; cursor: pointer;}
-  /* Inputs for pax counts */
+  /* Inputs for pax counts - Improved for mobile */
   .pax-inputs {
     margin: 10px 0 15px 0;
     display: flex;
     justify-content: space-between;
     gap: 15px;
     font-weight: 600;
+    flex-wrap: wrap;
   }
   .pax-inputs label {
     display: flex;
     flex-direction: column;
     font-size: 0.9rem;
     color: #003a78;
+    flex: 1;
+    min-width: 120px;
   }
   .pax-inputs input[type=number] {
     margin-top: 4px;
-    padding: 6px 8px;
+    padding: 10px 8px;
     border-radius: 6px;
     border: 1px solid #ccc;
-    width: 80px;
+    width: 100%;
     font-size: 1rem;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    background-color: white;
+    touch-action: manipulation;
   }
   .pax-inputs input[type=number]:focus {
     outline-color: #007acc;
     border-color: #007acc;
+    box-shadow: 0 0 5px rgba(0, 122, 204, 0.3);
+  }
+  .pax-inputs .input-group {
+    display: flex;
+    align-items: center;
+    margin-top: 4px;
+  }
+  .pax-inputs .btn-decrement,
+  .pax-inputs .btn-increment {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: #007acc;
+    color: white;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: manipulation;
+  }
+  .pax-inputs .btn-decrement:hover,
+  .pax-inputs .btn-increment:hover {
+    background-color: #005fa3;
+  }
+  .pax-inputs .number-input {
+    flex: 1;
+    text-align: center;
+    border-left: none;
+    border-right: none;
+  }
+  .pax-inputs .btn-decrement {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .pax-inputs .btn-increment {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .pax-count-display {
+    font-weight: 600;
+    color: #007acc;
+    text-align: center;
+    margin-top: 5px;
+    font-size: 0.9rem;
   }
   .slider-arrow {
     color: #808080;
@@ -156,6 +211,27 @@
   .car-price {
     margin-left: 20px;
     font-weight: 600;
+  }
+  
+  /* Mobile-specific styles */
+  @media (max-width: 768px) {
+    .main {
+      padding: 80px 15px;
+    }
+    .site-title {
+      font-size: 1.3rem;
+    }
+    .logo {
+      width: 40px;
+      height: 40px;
+    }
+    .pax-inputs {
+      flex-direction: column;
+      gap: 10px;
+    }
+    .pax-inputs label {
+      min-width: 100%;
+    }
   }
 </style>
 </head>
@@ -301,8 +377,24 @@ function loadGoaSelection() {
       <button class="accordion">Passengers</button>
       <div class="panel">
         <div class="pax-inputs" id="paxInputs">
-          <label for="adultCount">Adults: <input type="number" id="adultCount" min="1" value="1" /></label>
-          <label for="childCount">Children: <input type="number" id="childCount" min="0" value="0" /></label>
+          <label for="adultCount">
+            Adults:
+            <div class="input-group">
+              <button class="btn-decrement" onclick="decrementAdult()">-</button>
+              <input type="number" id="adultCount" min="1" max="10" value="1" class="number-input" />
+              <button class="btn-increment" onclick="incrementAdult()">+</button>
+            </div>
+            <div class="pax-count-display" id="adultDisplay">1 Adult</div>
+          </label>
+          <label for="childCount">
+            Children:
+            <div class="input-group">
+              <button class="btn-decrement" onclick="decrementChild()">-</button>
+              <input type="number" id="childCount" min="0" max="10" value="0" class="number-input" />
+              <button class="btn-increment" onclick="incrementChild()">+</button>
+            </div>
+            <div class="pax-count-display" id="childDisplay">0 Children</div>
+          </label>
         </div>
       </div>
       <button class="accordion">Transportation</button>
@@ -391,6 +483,43 @@ function loadGoaSelection() {
   }, 100);
 }
 
+// --- PASSENGER COUNT FUNCTIONS ---
+function incrementAdult() {
+  const input = document.getElementById("adultCount");
+  const value = parseInt(input.value) || 0;
+  if (value < 10) {
+    input.value = value + 1;
+    onPaxChanged();
+  }
+}
+
+function decrementAdult() {
+  const input = document.getElementById("adultCount");
+  const value = parseInt(input.value) || 0;
+  if (value > 1) {
+    input.value = value - 1;
+    onPaxChanged();
+  }
+}
+
+function incrementChild() {
+  const input = document.getElementById("childCount");
+  const value = parseInt(input.value) || 0;
+  if (value < 10) {
+    input.value = value + 1;
+    onPaxChanged();
+  }
+}
+
+function decrementChild() {
+  const input = document.getElementById("childCount");
+  const value = parseInt(input.value) || 0;
+  if (value > 0) {
+    input.value = value - 1;
+    onPaxChanged();
+  }
+}
+
 // --- EVENT HANDLING & LOGIC ---
 function initializeEventListeners() {
   const acc = document.getElementsByClassName("accordion");
@@ -442,8 +571,23 @@ function initializeEventListeners() {
   });
   // Removed default selection for days/nights
 
-  document.getElementById("adultCount").addEventListener("input", onPaxChanged);
-  document.getElementById("childCount").addEventListener("input", onPaxChanged);
+  // Multiple event listeners for passenger count to ensure mobile compatibility
+  const adultInput = document.getElementById("adultCount");
+  const childInput = document.getElementById("childCount");
+  
+  if (adultInput) {
+    adultInput.addEventListener("input", onPaxChanged);
+    adultInput.addEventListener("change", onPaxChanged);
+    adultInput.addEventListener("blur", onPaxChanged);
+    adultInput.addEventListener("touchend", onPaxChanged);
+  }
+  
+  if (childInput) {
+    childInput.addEventListener("input", onPaxChanged);
+    childInput.addEventListener("change", onPaxChanged);
+    childInput.addEventListener("blur", onPaxChanged);
+    childInput.addEventListener("touchend", onPaxChanged);
+  }
 
   // Add event listeners for all clickable items including food
   document.querySelectorAll(".panel li").forEach(item => {
@@ -545,7 +689,15 @@ function onPaxChanged() {
   const childInput = document.getElementById("childCount");
   adultCount = Math.max(1, parseInt(adultInput.value) || 1);
   childCount = Math.max(0, parseInt(childInput.value) || 0);
-  adultInput.value = adultCount; childInput.value = childCount;
+  adultInput.value = adultCount; 
+  childInput.value = childCount;
+  
+  // Update display text
+  const adultDisplay = document.getElementById("adultDisplay");
+  const childDisplay = document.getElementById("childDisplay");
+  if (adultDisplay) adultDisplay.textContent = `${adultCount} Adult${adultCount > 1 ? 's' : ''}`;
+  if (childDisplay) childDisplay.textContent = `${childCount} Child${childCount !== 1 ? 'ren' : ''}`;
+  
   updateDynamicPrices();
   
   // Update hotel price if a hotel is selected
