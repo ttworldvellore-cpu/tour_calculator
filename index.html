@@ -188,29 +188,179 @@
   .transport-option.selected .item-name {
     color: white;
   }
-  .car-option {
+  .transfer-option {
     padding: 8px 12px;
     margin: 5px 0;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
   }
-  .car-option:hover {
+  .transfer-option:hover {
     background-color: #cce7ff;
   }
-  .car-option.selected {
+  .transfer-option.selected {
     background-color: #007acc;
     color: white;
   }
-  .car-selection-hint {
+  .transfer-selection-hint {
     font-size: 0.85rem;
     color: #666;
     font-style: italic;
     margin-top: 5px;
   }
-  .car-price {
+  .transfer-price {
     margin-left: 20px;
     font-weight: 600;
+  }
+  
+  /* Horizontal sightseeing slider styling */
+  .sightseeing-slider-container {
+    position: relative;
+    margin: 15px 0;
+    overflow: hidden;
+    border-radius: 8px;
+  }
+  .sightseeing-slider {
+    display: flex;
+    transition: transform 0.3s ease;
+    gap: 15px;
+  }
+  .sightseeing-card {
+    min-width: 160px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+  }
+  .sightseeing-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  .sightseeing-card img {
+    width: 160px;
+    height: 120px;
+    object-fit: cover;
+  }
+  .sightseeing-card .place-name {
+    padding: 8px;
+    text-align: center;
+    font-weight: 600;
+    color: #003a78;
+    font-size: 0.9rem;
+  }
+  .sightseeing-slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  }
+  .sightseeing-slider-arrow:hover {
+    background-color: rgba(255, 255, 255, 0.95);
+  }
+  .sightseeing-slider-arrow.left {
+    left: 10px;
+  }
+  .sightseeing-slider-arrow.right {
+    right: 10px;
+  }
+  .sightseeing-transport {
+    margin-top: 15px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+  }
+  .sightseeing-transport h5 {
+    margin: 0 0 10px 0;
+    color: #007acc;
+    font-size: 1rem;
+  }
+  .transport-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .transport-option-btn {
+    padding: 8px 12px;
+    border: 1px solid #007acc;
+    border-radius: 6px;
+    background: white;
+    color: #007acc;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+  }
+  .transport-option-btn:hover {
+    background-color: #e6f2ff;
+  }
+  .transport-option-btn.selected {
+    background-color: #007acc;
+    color: white;
+  }
+  
+  /* Bike selection styling */
+  .bike-selection {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f0f7ff;
+    border-radius: 6px;
+    display: none;
+  }
+  .bike-selection.show {
+    display: block;
+  }
+  .bike-selection-label {
+    font-size: 0.9rem;
+    color: #003a78;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .bike-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .bike-input {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .bike-price-display {
+    font-size: 0.85rem;
+    color: #666;
+    margin-left: 10px;
+  }
+  
+  /* Food options styling */
+  .food-option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+  }
+  .food-option-name {
+    flex: 1;
+  }
+  .food-option-price {
+    font-weight: 600;
+    color: #007acc;
+  }
+  .food-option.selected {
+    background-color: #e6f2ff;
   }
   
   /* Mobile-specific styles */
@@ -232,6 +382,16 @@
     .pax-inputs label {
       min-width: 100%;
     }
+    .transport-options {
+      flex-direction: column;
+    }
+    .sightseeing-card {
+      min-width: 140px;
+    }
+    .sightseeing-card img {
+      width: 140px;
+      height: 105px;
+    }
   }
 </style>
 </head>
@@ -239,7 +399,7 @@
 <header class="tt-header">
   <div class="logo-section">
     <button class="hamburger" onclick="toggleSidebar()">☰</button>
-    <img src="./logo.png" alt="TT World Logo" class="logo" />
+    <img src="https://picsum.photos/seed/ttworldlogo/50/50.jpg" alt="TT World Logo" class="logo" />
     <h1 class="site-title">TT WORLD</h1>
   </div>
 </header>
@@ -272,7 +432,11 @@ let childCount = 0;
 let currentHotelType = "casaMaria";
 let currentHotelImageSlide = 0;
 let currentHotelDetailSlide = 0;
-let selectedCar = ""; // Track selected car
+let selectedPickup = ""; // Track selected pickup
+let selectedDrop = ""; // Track selected drop
+let selectedSightseeingTransport = {}; // Track transport for each sightseeing
+let currentSightseeingSlides = {}; // Track current slide for each sightseeing
+let bikeCounts = {}; // Track bike counts for each transport selection
 
 // --- PRICING & DATA CONSTANTS ---
 const PRICES = {
@@ -282,23 +446,29 @@ const PRICES = {
     rivasaResort: 2200 
   },
   transportation: { 
-    flight: 5000,
-    train: 1000,
-    sicTransfer: 500, 
-    rentalCarDriver: 800, 
-    rentalBike: 500, 
-    rentalCar: 500,
-    carTransfer: { madagon: 2000, dabolim: 1800, mopa: 1800 }
+    pickup: 750, // Price per person for pickup (3000 for 4 people)
+    drop: 750 // Price per person for drop (3000 for 4 people)
+  },
+  sightseeingTransport: {
+    ownTransfer: 0,
+    privateBike: 500, // Changed to 500 per bike as requested
+    cabWithDriver: 1500,
+    cabWithoutDriver: 1000
   },
   sightseeingPackage: { 
-    northGoa: 2700, 
-    southGoa: 2500, 
+    northGoa: 0, // Changed from 500 to 0 as requested
+    southGoa: 0, // Changed from 500 to 0 as requested
     grandIslandFullDay: 1800,
     grandIslandHalfDay: 1200,
     malvanFullDay: 1800,
     malvanHalfDay: 1200,
     dudhsagarWaterfalls: 2000,
     dudhsagarFullDay: 2000
+  },
+  food: {
+    breakfast: 300,
+    lunch: 700,
+    dinner: 700
   },
   cruisePackage: { 
     dinnerCruise: 1200,
@@ -311,14 +481,74 @@ const PRICES = {
   }
 };
 
+// Sightseeing places data with images
+const sightseeingPlaces = {
+  northGoa: [
+    { name: "Fort Aguada", image: "https://picsum.photos/seed/fortaguada/160/120.jpg" },
+    { name: "Saligao Church", image: "https://picsum.photos/seed/saligaochurch/160/120.jpg" },
+    { name: "Sinquirim Beach", image: "https://picsum.photos/seed/sinquirimbeach/160/120.jpg" },
+    { name: "Baga Beach", image: "https://picsum.photos/seed/bagabeach/160/120.jpg" },
+    { name: "Old Goa Church", image: "https://picsum.photos/seed/oldgoachurch/160/120.jpg" },
+    { name: "Anjuna Beach", image: "https://picsum.photos/seed/anjunabeach/160/120.jpg" },
+    { name: "Vagator Beach", image: "https://picsum.photos/seed/vagatorbeach/160/120.jpg" },
+    { name: "Aguada", image: "https://picsum.photos/seed/aguada/160/120.jpg" }
+  ],
+  southGoa: [
+    { name: "Miramar Beach", image: "https://picsum.photos/seed/miramarbeach/160/120.jpg" },
+    { name: "Tirupathi Balaji Temple", image: "https://picsum.photos/seed/tirupathibalaji/160/120.jpg" },
+    { name: "Se Cathedral Church", image: "https://picsum.photos/seed/secathedral/160/120.jpg" },
+    { name: "Old Goa Church", image: "https://picsum.photos/seed/oldgoachurch2/160/120.jpg" },
+    { name: "Dolphin Sightseeing", image: "https://picsum.photos/seed/dolphin/160/120.jpg" },
+    { name: "Mangeshi Temple", image: "https://picsum.photos/seed/mangeshitemple/160/120.jpg" },
+    { name: "Boat Cruise at Mandovi River", image: "https://picsum.photos/seed/boatcruise/160/120.jpg" }
+  ],
+  grandIslandFullDay: [
+    { name: "Scuba Diving", image: "https://picsum.photos/seed/scubadiving/160/120.jpg" },
+    { name: "Jet Ski", image: "https://picsum.photos/seed/jetski/160/120.jpg" },
+    { name: "Banana Boat", image: "https://picsum.photos/seed/bananaboat/160/120.jpg" },
+    { name: "Bumper Ride", image: "https://picsum.photos/seed/bumperride/160/120.jpg" },
+    { name: "Snorkeling", image: "https://picsum.photos/seed/snorkeling/160/120.jpg" },
+    { name: "Parasailing", image: "https://picsum.photos/seed/parasailing/160/120.jpg" },
+    { name: "Speed Boat Ride", image: "https://picsum.photos/seed/speedboat/160/120.jpg" }
+  ],
+  grandIslandHalfDay: [
+    { name: "Scuba Diving", image: "https://picsum.photos/seed/scubadiving2/160/120.jpg" },
+    { name: "Jet Ski", image: "https://picsum.photos/seed/jetski2/160/120.jpg" },
+    { name: "Banana Boat", image: "https://picsum.photos/seed/bananaboat2/160/120.jpg" },
+    { name: "Bumper Ride", image: "https://picsum.photos/seed/bumperride2/160/120.jpg" },
+    { name: "Snorkeling", image: "https://picsum.photos/seed/snorkeling2/160/120.jpg" },
+    { name: "Parasailing", image: "https://picsum.photos/seed/parasailing2/160/120.jpg" },
+    { name: "Speed Boat Ride", image: "https://picsum.photos/seed/speedboat2/160/120.jpg" }
+  ],
+  malvanFullDay: [
+    { name: "Elephant Bath", image: "https://picsum.photos/seed/elephantbath/160/120.jpg" },
+    { name: "Spice Plantation", image: "https://picsum.photos/seed/spiceplantation/160/120.jpg" },
+    { name: "Butterfly Conservatory", image: "https://picsum.photos/seed/butterfly/160/120.jpg" },
+    { name: "Old Goa Churches", image: "https://picsum.photos/seed/oldgoachurches/160/120.jpg" },
+    { name: "Dudhsagar Waterfalls", image: "https://picsum.photos/seed/dudhsagar/160/120.jpg" }
+  ],
+  malvanHalfDay: [
+    { name: "Elephant Bath", image: "https://picsum.photos/seed/elephantbath2/160/120.jpg" },
+    { name: "Spice Plantation", image: "https://picsum.photos/seed/spiceplantation2/160/120.jpg" },
+    { name: "Butterfly Conservatory", image: "https://picsum.photos/seed/butterfly2/160/120.jpg" },
+    { name: "Old Goa Churches", image: "https://picsum.photos/seed/oldgoachurches2/160/120.jpg" },
+    { name: "Dudhsagar Waterfalls", image: "https://picsum.photos/seed/dudhsagar2/160/120.jpg" }
+  ],
+  dudhsagarWaterfalls: [
+    { name: "Dudhsagar Waterfalls", image: "https://picsum.photos/seed/dudhsagar3/160/120.jpg" },
+    { name: "Waterfall Viewpoint", image: "https://picsum.photos/seed/waterfall/160/120.jpg" },
+    { name: "Forest Trail", image: "https://picsum.photos/seed/foresttrail/160/120.jpg" }
+  ]
+};
+
 const hotelImages = {
-  casaMaria: ["https://r1imghtlak.mmtcdn.com/1493b06f-8b80-43af-ac8d-29ab83522822.jpeg", "https://r1imghtlak.mmtcdn.com/7f4ba584-3f7d-449c-bb8c-ab87e91736f9.jpg","https://r1imghtlak.mmtcdn.com/988e53ce-e929-4fd4-8ef5-9f0f5eac8b6c.jpg","https://r1imghtlak.mmtcdn.com/901e32c7-2656-4ba0-9f11-139c685366bc.jpeg",
-  "https://r1imghtlak.mmtcdn.com/b9a47daf-613b-407c-ac85-213f44d49e82.jpg","https://r1imghtlak.mmtcdn.com/1bb89522-71a1-42c2-b099-c10f27753618.jpg","https://r1imghtlak.mmtcdn.com/81c1c79f-e8dc-48b5-8f38-db58ee5088e5.jpg"],
-  mayfieldBoutique: ["https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/htl-imgs/202103240931205880-181d433c-7fbe-4515-b442-3d2eb24a898c.jpg", "https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/htl-imgs/202103240931205880-dfb50fef-b380-4234-818e-3032d0b62e20.jpg","https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/htl-imgs/202103240931205880-c233f8f1-4a84-4bca-bba0-aa8749cf220a.jpg",
-  "https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/htl-imgs/202103240931205880-04d18f8c-60c5-4351-9bcd-512ae3280d0f.jpg","https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/room-imgs/202103240931205880-8085766-e3af4151-5ebe-49f3-964c-44dcd3fc01ab.jpg","https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/room-imgs/202103240931205880-1eedcff2-ce4d-46dd-a6aa-91025774b732.jpg","https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/room-imgs/202103240931205880-208261-beb31df8-8167-422b-9e1d-578d1c40e4d8.jpg","https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/room-imgs/202103240931205880-13846-d432c4469f7011eb9e0c0242ac110002.jpg","https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/room-imgs/202103240931205880-40899-7cae5e489f6f11eba2670242ac110002.jpg"],
-  rivasaResort: ["https://r1imghtlak.mmtcdn.com/05cc19bea00011eb9ea40242ac110002.jpg", "https://r1imghtlak.mmtcdn.com/5fab601a883611e7b2b3025f77df004f.jpg","https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/htl-imgs/200710170911208196-74265f8f-8f03-4314-9d2b-af5de9dceb65.jpg","https://r1imghtlak.mmtcdn.com/de5a1912ef1611e9bcef0242ac110003.jpg","https://r1imghtlak.mmtcdn.com/700361a9-9a3e-458d-bab0-0f36a828b5d1.jpeg",
-  "https://r1imghtlak.mmtcdn.com/7c6a18f1-a2cb-4f71-b895-5cd51a236444.jpg","https://r1imghtlak.mmtcdn.com/6a98651c59c311e99b810242ac110002.png","https://r1imghtlak.mmtcdn.com/a4030424-e52b-489c-8d8d-ccc89a1f2377.jpeg","https://r1imghtlak.mmtcdn.com/6a98651c59c311e99b810242ac110002.png","https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/room-imgs/200710170911208196-6594-a444ff53-81fe-494e-a27f-f3faeecf64a3.jpg",
-  "https://r1imghtlak.mmtcdn.com/c83c9520a01711eba0200242ac110002.jpg","https://r1imghtlak.mmtcdn.com/a9c97bb0-c558-4794-989d-a50b196a6c8a.jpg","https://r1imghtlak.mmtcdn.com/b72dca6c59c211e98bf40242ac110002.jpg","https://r1imghtlak.mmtcdn.com/6f974249-3923-4f11-9bc1-f8b1c4f6e4f1.jpg"]
+  casaMaria: ["https://picsum.photos/seed/casamaria1/400/300.jpg", "https://picsum.photos/seed/casamaria2/400/300.jpg","https://picsum.photos/seed/casamaria3/400/300.jpg","https://picsum.photos/seed/casamaria4/400/300.jpg",
+  "https://picsum.photos/seed/casamaria5/400/300.jpg","https://picsum.photos/seed/casamaria6/400/300.jpg","https://picsum.photos/seed/casamaria7/400/300.jpg"],
+  mayfieldBoutique: ["https://picsum.photos/seed/mayfield1/400/300.jpg", "https://picsum.photos/seed/mayfield2/400/300.jpg","https://picsum.photos/seed/mayfield3/400/300.jpg",
+  "https://picsum.photos/seed/mayfield4/400/300.jpg","https://picsum.photos/seed/mayfield5/400/300.jpg","https://picsum.photos/seed/mayfield6/400/300.jpg","https://picsum.photos/seed/mayfield7/400/300.jpg","https://picsum.photos/seed/mayfield8/400/300.jpg","https://picsum.photos/seed/mayfield9/400/300.jpg"],
+  rivasaResort: ["https://picsum.photos/seed/rivasa1/400/300.jpg", "https://picsum.photos/seed/rivasa2/400/300.jpg","https://picsum.photos/seed/rivasa3/400/300.jpg","https://picsum.photos/seed/rivasa4/400/300.jpg","https://picsum.photos/seed/rivasa5/400/300.jpg",
+  "https://picsum.photos/seed/rivasa6/400/300.jpg","https://picsum.photos/seed/rivasa7/400/300.jpg","https://picsum.photos/seed/rivasa8/400/300.jpg","https://picsum.photos/seed/rivasa9/400/300.jpg","https://picsum.photos/seed/rivasa10/400/300.jpg",
+  "https://picsum.photos/seed/rivasa11/400/300.jpg","https://picsum.photos/seed/rivasa12/400/300.jpg","https://picsum.photos/seed/rivasa13/400/300.jpg","https://picsum.photos/seed/rivasa14/400/300.jpg"]
 };
 
 const hotelDetailsMap = {
@@ -355,7 +585,7 @@ function showTrips() {
     <h2>Explore Our Tour Packages ✈️</h2>
     <div class='trip-section'>
       <div class='trip-card'>
-        <img src='https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60' alt='Goa Beach'/>
+        <img src='https://picsum.photos/seed/goabeach/260/150.jpg' alt='Goa Beach'/>
         <div class='trip-info'>
           <h4>Goa Beach Getaway</h4>
           <p>Enjoy sunny beaches, nightlife, and heritage.</p>
@@ -370,7 +600,7 @@ function showTrips() {
 function loadGoaSelection() {
   document.getElementById("mainContent").innerHTML = `
     <div class="selection-container" id="selectionContainer">
-      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=60" alt="Goa Beach" class="trip-banner" />
+      <img src="https://picsum.photos/seed/goabeachbanner/600/220.jpg" alt="Goa Beach" class="trip-banner" />
       <div class="trip-title">Goa Trip</div>
       <button class="accordion">Days / Nights</button>
       <div class="panel"><ul id="daysList"><li data-days="3" data-nights="2">2 Nights / 3 Days</li><li data-days="4" data-nights="3">3 Nights / 4 Days</li><li data-days="5" data-nights="4">4 Nights / 5 Days</li></ul></div>
@@ -397,64 +627,62 @@ function loadGoaSelection() {
           </label>
         </div>
       </div>
-      <button class="accordion">Transportation</button>
+      <button class="accordion">Pickup and Drop</button>
       <div class="panel">
         <ul>
-          <li class="transport-option" data-key="flight" data-base-price="5000" data-category="Transportation" data-per-day="false"><span class="item-name">Flight (Approx)</span><span class="item-price" style="margin-left:20px;">₹5000</span></li>
-          <li class="transport-option" data-key="train" data-base-price="1000" data-category="Transportation" data-per-day="false"><span class="item-name">Train (Approx)</span><span class="item-price" style="margin-left:20px;">₹1000</span></li>
-          <li class="toggle-sublist" data-category="Transportation" data-key="carTransfer">
-            <span class="item-name">Pickup & Drop</span>
-            <span class="car-price" id="carPriceDisplay"></span>
-            <div class="car-selection-hint">Click to select a car</div>
+          <li class="toggle-sublist" data-category="Transportation" data-key="pickup">
+            <span class="item-name">Pickup</span>
+            <span class="transfer-price" id="pickupPriceDisplay"></span>
+            <div class="transfer-selection-hint">Click to select pickup option</div>
           </li>
           <ul class="sublist">
-            <li class="car-option" data-car="madagon car" data-price="2000">Madagon car</li>
-            <li class="car-option" data-car="dabolim car" data-price="1800">Dabolim car</li>
-            <li class="car-option" data-car="mopa car" data-price="1800">MOPA car</li>
+            <li class="transfer-option" data-transfer="airport" data-type="pickup" data-price="750">Airport Pickup (₹750 per person)</li>
+            <li class="transfer-option" data-transfer="railway" data-type="pickup" data-price="750">Railway Station Pickup (₹750 per person)</li>
           </ul>
-          <li class="transport-option" data-key="sicTransfer" data-base-price="500" data-category="Transportation" data-per-day="false"><span class="item-name">SIC basis transfer</span><span class="item-price" style="margin-left:20px;">₹500</span></li>
-          <li class="transport-option" data-key="rentalCarDriver" data-base-price="800" data-category="Transportation" data-per-day="true"><span class="item-name">Rental car with driver</span><span class="item-price" style="margin-left:20px;">₹0</span></li>
-          <li class="transport-option" data-key="rentalBike" data-base-price="500" data-category="Transportation" data-per-day="true"><span class="item-name">Rental bike</span><span class="item-price" style="margin-left:20px;">₹0</span></li>
-          <li class="transport-option" data-key="rentalCar" data-base-price="500" data-category="Transportation" data-per-day="true"><span class="item-name">Rental car</span><span class="item-price" style="margin-left:20px;">₹0</span></li>
+          <li class="toggle-sublist" data-category="Transportation" data-key="drop">
+            <span class="item-name">Drop</span>
+            <span class="transfer-price" id="dropPriceDisplay"></span>
+            <div class="transfer-selection-hint">Click to select drop option</div>
+          </li>
+          <ul class="sublist">
+            <li class="transfer-option" data-transfer="airport" data-type="drop" data-price="750">Airport Drop (₹750 per person)</li>
+            <li class="transfer-option" data-transfer="railway" data-type="drop" data-price="750">Railway Station Drop (₹750 per person)</li>
+          </ul>
         </ul>
       </div>
       <button class="accordion">Hotel</button>
       <div class="panel">
         <ul>
-          <li class="hotel-option" data-price="1600" data-type="casaMaria" data-category="Hotel"><span class="item-name">Casa Maria</span><span class="item-price" style="margin-left: 20px;">₹1600</span></li>
-          <li class="hotel-option" data-price="1900" data-type="mayfieldBoutique" data-category="Hotel"><span class="item-name">Mayfield Boutique</span><span class="item-price" style="margin-left: 20px;">₹1900</span></li>
-          <li class="hotel-option" data-price="2200" data-type="rivasaResort" data-category="Hotel"><span class="item-name">Rivasa Resort</span><span class="item-price" style="margin-left: 20px;">₹2200</span></li>
+          <li class="hotel-option" data-price="1600" data-type="casaMaria" data-category="Hotel"><span class="item-name">Casa Maria</span><span class="item-price" style="margin-left: 20px;">₹1600 per person</span></li>
+          <li class="hotel-option" data-price="1900" data-type="mayfieldBoutique" data-category="Hotel"><span class="item-name">Mayfield Boutique</span><span class="item-price" style="margin-left: 20px;">₹1900 per person</span></li>
+          <li class="hotel-option" data-price="2200" data-type="rivasaResort" data-category="Hotel"><span class="item-name">Rivasa Resort</span><span class="item-price" style="margin-left: 20px;">₹2200 per person</span></li>
         </ul>
         <div id="hotelDetails" class="sub-section" style="text-align:center; margin-top:10px; display:none;"></div>
       </div>
       <button class="accordion">Sightseeing</button>
       <div class="panel">
         <ul>
-          <li class="toggle-sublist" data-category="Sightseeing" data-package="northGoa"><span class="item-name">North Goa Tour</span><span class="item-price" style="margin-left:20px;">₹2700</span></li>
+          <li class="toggle-sublist" data-category="Sightseeing" data-package="northGoa"><span class="item-name">North Goa Tour</span><span class="item-price" style="margin-left:20px;">Free</span></li>
           <ul class="sublist">
-            <li>Fort Aguada</li><li>Saligao Church</li><li>Sinquirim Beach</li><li>Baga Beach</li><li>Old Goa Church</li><li>Anjuna Beach</li><li>Vagator Beach</li><li>Aguada</li>
           </ul>
-          <li class="toggle-sublist" data-category="Sightseeing" data-package="southGoa"><span class="item-name">South Goa Tour</span><span class="item-price" style="margin-left:20px;">₹2500</span></li>
+          <li class="toggle-sublist" data-category="Sightseeing" data-package="southGoa"><span class="item-name">South Goa Tour</span><span class="item-price" style="margin-left:20px;">Free</span></li>
           <ul class="sublist">
-            <li>Miramar Beach</li><li>Tirupathi Balaji Temple</li><li>Se Cathedral Church</li><li>Old Goa Church</li><li>Dolphin Sightseeing</li><li>Mangeshi Temple</li><li>Boat Cruise at Mandovi River</li>
           </ul>
           <li class="toggle-sublist" data-category="Sightseeing" data-package="grandIslandFullDay"><span class="item-name">Grand Island Full Day Adventure Trip</span><span class="item-price" style="margin-left:20px;">₹1800</span></li>
           <ul class="sublist">
-            <li>Scuba Diving</li><li>Jet Ski</li><li>Banana Boat</li><li>Bumper Ride</li><li>Snorkeling</li><li>Parasailing</li><li>Speed Boat Ride</li>
           </ul>
           <li class="toggle-sublist" data-category="Sightseeing" data-package="grandIslandHalfDay"><span class="item-name">Grand Island Half Day Adventure Trip</span><span class="item-price" style="margin-left:20px;">₹1200</span></li>
           <ul class="sublist">
-            <li>Scuba Diving</li><li>Jet Ski</li><li>Banana Boat</li><li>Bumper Ride</li><li>Snorkeling</li><li>Parasailing</li><li>Speed Boat Ride</li>
           </ul>
           <li class="toggle-sublist" data-category="Sightseeing" data-package="malvanFullDay"><span class="item-name">Malvan Full Day Adventure Trip</span><span class="item-price" style="margin-left:20px;">₹1800</span></li>
           <ul class="sublist">
-            <li>Elephant Bath</li><li>Spice Plantation</li><li>Butterfly Conservatory</li><li>Old Goa Churches</li><li>Dudhsagar Waterfalls</li>
           </ul>
           <li class="toggle-sublist" data-category="Sightseeing" data-package="malvanHalfDay"><span class="item-name">Malvan Half Day Adventure Trip</span><span class="item-price" style="margin-left:20px;">₹1200</span></li>
           <ul class="sublist">
-            <li>Elephant Bath</li><li>Spice Plantation</li><li>Butterfly Conservatory</li><li>Old Goa Churches</li><li>Dudhsagar Waterfalls</li>
           </ul>
           <li class="toggle-sublist" data-category="Sightseeing" data-package="dudhsagarWaterfalls"><span class="item-name">Dudhsagar Waterfalls</span><span class="item-price" style="margin-left:20px;">₹2000</span></li>
+          <ul class="sublist">
+          </ul>
         </ul>
       </div>
       <button class="accordion">Otheractivities</button>
@@ -467,9 +695,18 @@ function loadGoaSelection() {
       </div>
       <button class="accordion">Food</button>
       <div class="panel">
-        <ul>
-          <li class="food-option" data-type="breakfast" data-category="Food" data-price="0"><span class="item-name">Breakfast Included</span></li>
-        </ul>
+        <div class="food-option" data-type="breakfast" data-category="Food" data-price="300">
+          <span class="food-option-name">Breakfast</span>
+          <span class="food-option-price">₹300 per person</span>
+        </div>
+        <div class="food-option" data-type="lunch" data-category="Food" data-price="700">
+          <span class="food-option-name">Lunch</span>
+          <span class="food-option-price">₹700 per person</span>
+        </div>
+        <div class="food-option" data-type="dinner" data-category="Food" data-price="700">
+          <span class="food-option-name">Dinner</span>
+          <span class="food-option-price">₹700 per person</span>
+        </div>
       </div>
       <div class="summary-box"><h4>Selected Items:</h4><div id="selectedItems">None</div></div>
       <div class="total" id="totalAmount">Grand Total: ₹0</div>
@@ -534,13 +771,14 @@ function initializeEventListeners() {
     title.addEventListener("click", (e) => {
       e.stopPropagation();
       
-      // Special handling for car transfer toggle
-      if (title.getAttribute('data-key') === 'carTransfer') {
+      // Special handling for transfer toggles
+      const key = title.getAttribute('data-key');
+      if (key === 'pickup' || key === 'drop') {
         const isAlreadySelected = title.classList.contains("selected");
         
         if (isAlreadySelected) {
-          // Unselect car transfer
-          unselectCar();
+          // Unselect transfer
+          unselectTransfer(key);
         } else {
           // Just expand/collapse sublist normally
           const siblingList = title.nextElementSibling;
@@ -553,16 +791,22 @@ function initializeEventListeners() {
         const siblingList = title.nextElementSibling;
         if (siblingList && siblingList.classList.contains('sublist')) {
           siblingList.classList.toggle("show");
+          
+          // If it's a sightseeing sublist, add horizontal slider and transport options
+          const packageKey = title.getAttribute('data-package');
+          if (packageKey && title.getAttribute('data-category') === 'Sightseeing') {
+            addSightseeingContent(title, packageKey);
+          }
         }
       }
     });
   });
 
-  // Add event listeners for car options
-  document.querySelectorAll(".car-option").forEach(option => {
+  // Add event listeners for transfer options
+  document.querySelectorAll(".transfer-option").forEach(option => {
     option.addEventListener("click", (e) => {
       e.stopPropagation();
-      selectCar(option);
+      selectTransfer(option);
     });
   });
 
@@ -590,7 +834,7 @@ function initializeEventListeners() {
   }
 
   // Add event listeners for all clickable items including food
-  document.querySelectorAll(".panel li").forEach(item => {
+  document.querySelectorAll(".panel li, .food-option").forEach(item => {
     if (item.closest("#daysList")) return;
     item.addEventListener("click", e => { 
       e.stopPropagation(); 
@@ -604,71 +848,348 @@ function initializeEventListeners() {
   }
 }
 
-// Function to unselect car
-function unselectCar() {
-  // Clear all car selections
-  document.querySelectorAll(".car-option").forEach(opt => {
+// Add sightseeing content with horizontal slider and transport options
+function addSightseeingContent(titleElement, packageKey) {
+  const sublist = titleElement.nextElementSibling;
+  
+  // Check if content already added
+  if (sublist.querySelector('.sightseeing-slider-container')) return;
+  
+  // Initialize current slide for this package if not already
+  if (!currentSightseeingSlides[packageKey]) {
+    currentSightseeingSlides[packageKey] = 0;
+  }
+  
+  // Create horizontal slider container
+  const sliderContainer = document.createElement('div');
+  sliderContainer.className = 'sightseeing-slider-container';
+  sliderContainer.innerHTML = `
+    <div class="sightseeing-slider" id="sightseeing-slider-${packageKey}">
+      ${sightseeingPlaces[packageKey].map(place => `
+        <div class="sightseeing-card">
+          <img src="${place.image}" alt="${place.name}">
+          <div class="place-name">${place.name}</div>
+        </div>
+      `).join('')}
+    </div>
+    <button class="sightseeing-slider-arrow left" onclick="changeSightseeingSlide('${packageKey}', -1)">&lt;</button>
+    <button class="sightseeing-slider-arrow right" onclick="changeSightseeingSlide('${packageKey}', 1)">&gt;</button>
+  `;
+  
+  // Create transport options
+  const transportSection = document.createElement('div');
+  transportSection.className = 'sightseeing-transport';
+  transportSection.innerHTML = `
+    <h5>Transportation Options</h5>
+    <div class="transport-options">
+      <button class="transport-option-btn" data-package="${packageKey}" data-transport="ownTransfer">Own Transfer</button>
+      <button class="transport-option-btn" data-package="${packageKey}" data-transport="privateBike">Private Bike</button>
+      <button class="transport-option-btn" data-package="${packageKey}" data-transport="cabWithDriver">Cab with Driver</button>
+      <button class="transport-option-btn" data-package="${packageKey}" data-transport="cabWithoutDriver">Cab without Driver</button>
+    </div>
+    <div class="bike-selection" id="bike-selection-${packageKey}">
+      <div class="bike-selection-label">Number of Bikes (₹500 per bike):</div>
+      <div class="bike-input-group">
+        <button class="btn-decrement" onclick="decrementBike('${packageKey}')">-</button>
+        <input type="number" id="bike-count-${packageKey}" class="bike-input" min="1" max="10" value="1">
+        <button class="btn-increment" onclick="incrementBike('${packageKey}')">+</button>
+        <span class="bike-price-display" id="bike-price-${packageKey}">₹500</span>
+      </div>
+    </div>
+  `;
+  
+  // Insert after existing list items (which are now empty)
+  sublist.appendChild(sliderContainer);
+  sublist.appendChild(transportSection);
+  
+  // Set initial slider position
+  updateSightseeingSliderPosition(packageKey);
+  
+  // Add event listeners for transport options
+  transportSection.querySelectorAll('.transport-option-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectSightseeingTransport(btn);
+    });
+  });
+  
+  // Add event listener for bike count input
+  const bikeInput = transportSection.querySelector(`#bike-count-${packageKey}`);
+  if (bikeInput) {
+    bikeInput.addEventListener('input', () => updateBikeCount(packageKey));
+    bikeInput.addEventListener('change', () => updateBikeCount(packageKey));
+  }
+  
+  // Check if a transport option was previously selected for this package
+  if (selectedSightseeingTransport[packageKey]) {
+    const selectedBtn = transportSection.querySelector(`[data-transport="${selectedSightseeingTransport[packageKey]}"]`);
+    if (selectedBtn) {
+      selectedBtn.classList.add('selected');
+      // Show bike selection if private bike is selected
+      if (selectedSightseeingTransport[packageKey] === 'privateBike') {
+        const bikeSelection = transportSection.querySelector(`#bike-selection-${packageKey}`);
+        if (bikeSelection) {
+          bikeSelection.classList.add('show');
+          // Set bike count from saved value
+          const savedCount = bikeCounts[packageKey] || 1;
+          bikeInput.value = savedCount;
+          updateBikePrice(packageKey);
+        }
+      }
+    }
+  }
+}
+
+// Bike count functions
+function incrementBike(packageKey) {
+  const input = document.getElementById(`bike-count-${packageKey}`);
+  if (input) {
+    const value = parseInt(input.value) || 0;
+    if (value < 10) {
+      input.value = value + 1;
+      updateBikeCount(packageKey);
+    }
+  }
+}
+
+function decrementBike(packageKey) {
+  const input = document.getElementById(`bike-count-${packageKey}`);
+  if (input) {
+    const value = parseInt(input.value) || 0;
+    if (value > 1) {
+      input.value = value - 1;
+      updateBikeCount(packageKey);
+    }
+  }
+}
+
+function updateBikeCount(packageKey) {
+  const input = document.getElementById(`bike-count-${packageKey}`);
+  if (input) {
+    const count = Math.max(1, parseInt(input.value) || 1);
+    input.value = count;
+    bikeCounts[packageKey] = count;
+    updateBikePrice(packageKey);
+    updateSightseeingTransportInSelection(packageKey, 'privateBike');
+    
+    // Update display for North Goa and South Goa
+    updateNorthSouthGoaDisplay(packageKey);
+  }
+}
+
+function updateBikePrice(packageKey) {
+  const count = bikeCounts[packageKey] || 1;
+  const priceDisplay = document.getElementById(`bike-price-${packageKey}`);
+  if (priceDisplay) {
+    priceDisplay.textContent = formatPrice(PRICES.sightseeingTransport.privateBike * count);
+  }
+}
+
+// Update display for North Goa and South Goa to show bike count
+function updateNorthSouthGoaDisplay(packageKey) {
+  // Only update for North Goa and South Goa
+  if (packageKey !== 'northGoa' && packageKey !== 'southGoa') return;
+  
+  const tourElement = document.querySelector(`[data-package="${packageKey}"]`);
+  if (!tourElement) return;
+  
+  const priceSpan = tourElement.querySelector('.item-price');
+  if (!priceSpan) return;
+  
+  // Check if private bike is selected
+  if (selectedSightseeingTransport[packageKey] === 'privateBike') {
+    const bikeCount = bikeCounts[packageKey] || 1;
+    const bikePrice = PRICES.sightseeingTransport.privateBike * bikeCount;
+    priceSpan.textContent = `${bikeCount} Bike${bikeCount > 1 ? 's' : ''} (${formatPrice(bikePrice)})`;
+  } else {
+    priceSpan.textContent = "Free";
+  }
+}
+
+// Change sightseeing slide
+function changeSightseeingSlide(packageKey, direction) {
+  const places = sightseeingPlaces[packageKey];
+  if (!places || places.length === 0) return;
+  
+  // Calculate how many cards can fit in container
+  const slider = document.getElementById(`sightseeing-slider-${packageKey}`);
+  if (!slider) return;
+  
+  const containerWidth = slider.parentElement.offsetWidth;
+  const cardWidth = 175; // 160px card width + 15px gap
+  const visibleCards = Math.floor(containerWidth / cardWidth);
+  const maxSlide = Math.max(0, places.length - visibleCards);
+  
+  currentSightseeingSlides[packageKey] += direction;
+  
+  // Boundary check
+  if (currentSightseeingSlides[packageKey] < 0) {
+    currentSightseeingSlides[packageKey] = 0;
+  } else if (currentSightseeingSlides[packageKey] > maxSlide) {
+    currentSightseeingSlides[packageKey] = maxSlide;
+  }
+  
+  updateSightseeingSliderPosition(packageKey);
+}
+
+// Update sightseeing slider position
+function updateSightseeingSliderPosition(packageKey) {
+  const slider = document.getElementById(`sightseeing-slider-${packageKey}`);
+  if (!slider) return;
+  
+  const cardWidth = 175; // 160px card width + 15px gap
+  slider.style.transform = `translateX(-${currentSightseeingSlides[packageKey] * cardWidth}px)`;
+}
+
+// Select sightseeing transport
+function selectSightseeingTransport(btn) {
+  const packageKey = btn.getAttribute('data-package');
+  const transportType = btn.getAttribute('data-transport');
+  
+  // Clear previous selection for this package
+  btn.parentElement.querySelectorAll('.transport-option-btn').forEach(b => {
+    b.classList.remove('selected');
+  });
+  
+  // Mark current selection
+  btn.classList.add('selected');
+  
+  // Show/hide bike selection based on transport type
+  const bikeSelection = document.getElementById(`bike-selection-${packageKey}`);
+  if (bikeSelection) {
+    if (transportType === 'privateBike') {
+      bikeSelection.classList.add('show');
+      // Initialize bike count if not already set
+      if (!bikeCounts[packageKey]) {
+        bikeCounts[packageKey] = 1;
+        const bikeInput = document.getElementById(`bike-count-${packageKey}`);
+        if (bikeInput) bikeInput.value = 1;
+        updateBikePrice(packageKey);
+      }
+    } else {
+      bikeSelection.classList.remove('show');
+    }
+  }
+  
+  // Update selected transport
+  selectedSightseeingTransport[packageKey] = transportType;
+  
+  // Update display for North Goa and South Goa
+  updateNorthSouthGoaDisplay(packageKey);
+  
+  // Update selected items
+  updateSightseeingTransportInSelection(packageKey, transportType);
+}
+
+// Update sightseeing transport in selected items
+function updateSightseeingTransportInSelection(packageKey, transportType) {
+  // Find sightseeing item in selectedItems
+  const sightseeingItem = selectedItems.find(item => 
+    item.category === 'Sightseeing' && item.type === packageKey
+  );
+  
+  if (sightseeingItem) {
+    // Update transport type
+    sightseeingItem.transport = transportType;
+    
+    // Update price if needed
+    let transportPrice = 0;
+    
+    // Special handling for North Goa and South Goa with private bikes
+    if ((packageKey === 'northGoa' || packageKey === 'southGoa') && transportType === 'privateBike') {
+      const bikeCount = bikeCounts[packageKey] || 1;
+      transportPrice = PRICES.sightseeingTransport[transportType] * bikeCount;
+    } else if (transportType === 'privateBike') {
+      const bikeCount = bikeCounts[packageKey] || 1;
+      transportPrice = PRICES.sightseeingTransport[transportType] * bikeCount;
+    } else {
+      transportPrice = PRICES.sightseeingTransport[transportType];
+    }
+    
+    const basePrice = PRICES.sightseeingPackage[packageKey];
+    const totalPeople = adultCount + (childCount * 0.5);
+    
+    sightseeingItem.price = (basePrice + transportPrice) * totalPeople;
+    sightseeingItem.transportPrice = transportPrice * totalPeople;
+    sightseeingItem.bikeCount = transportType === 'privateBike' ? (bikeCounts[packageKey] || 1) : 0;
+  }
+  
+  updateSummary();
+}
+
+// Function to unselect transfer
+function unselectTransfer(key) {
+  // Clear all transfer selections for this type
+  document.querySelectorAll(`.transfer-option[data-type="${key}"]`).forEach(opt => {
     opt.classList.remove("selected");
   });
   
-  // Reset selected car
-  selectedCar = "";
+  // Reset selected transfer
+  if (key === 'pickup') {
+    selectedPickup = "";
+  } else if (key === 'drop') {
+    selectedDrop = "";
+  }
   
-  // Remove car transfer from selected items
-  selectedItems = selectedItems.filter(item => item.key !== "carTransfer");
+  // Remove transfer from selected items
+  selectedItems = selectedItems.filter(item => item.key !== key);
   
   // Reset parent list item
-  const carLi = document.querySelector('[data-key="carTransfer"]');
-  if (carLi) {
-    carLi.classList.remove("selected");
-    document.getElementById("carPriceDisplay").textContent = "";
+  const transferLi = document.querySelector(`[data-key="${key}"]`);
+  if (transferLi) {
+    transferLi.classList.remove("selected");
+    document.getElementById(`${key}PriceDisplay`).textContent = "";
     // Show hint text
-    const hint = carLi.querySelector(".car-selection-hint");
+    const hint = transferLi.querySelector(".transfer-selection-hint");
     if (hint) hint.style.display = "block";
   }
   
   updateSummary();
 }
 
-// Handle car selection
-function selectCar(option) {
-  // Clear previous selection
-  document.querySelectorAll(".car-option").forEach(opt => {
+// Handle transfer selection
+function selectTransfer(option) {
+  const type = option.getAttribute("data-type");
+  const transfer = option.getAttribute("data-transfer");
+  const basePrice = parseInt(option.getAttribute("data-price"));
+  
+  // Clear previous selection for this type
+  document.querySelectorAll(`.transfer-option[data-type="${type}"]`).forEach(opt => {
     opt.classList.remove("selected");
   });
   
   // Mark current selection
   option.classList.add("selected");
   
-  // Get car details
-  const car = option.getAttribute("data-car");
-  const basePrice = parseInt(option.getAttribute("data-price"));
+  // Update selected transfer
+  if (type === 'pickup') {
+    selectedPickup = transfer;
+  } else if (type === 'drop') {
+    selectedDrop = transfer;
+  }
   
-  // Update selected car
-  selectedCar = car;
+  // Remove previous transfer from selected items if exists
+  selectedItems = selectedItems.filter(item => item.key !== type);
   
-  // Remove previous car transfer from selected items if exists
-  selectedItems = selectedItems.filter(item => item.key !== "carTransfer");
-  
-  // Calculate price based on adults
+  // Calculate price based on adults (₹750 per person, which is ₹3000 for 4 people)
   const price = basePrice * adultCount;
   
   // Add to selected items
   selectedItems.push({
-    name: `Pickup & Drop (${car.charAt(0).toUpperCase() + car.slice(1)})`,
+    name: `${type.charAt(0).toUpperCase() + type.slice(1)} (${transfer.charAt(0).toUpperCase() + transfer.slice(1)})`,
     price: price,
     category: "Transportation",
-    key: "carTransfer",
-    type: car
+    key: type,
+    type: transfer
   });
   
   // Update parent list item to show selected
   const parentLi = option.closest(".sublist").previousElementSibling;
   if (parentLi) {
     parentLi.classList.add("selected");
-    document.getElementById("carPriceDisplay").textContent = formatPrice(price);
+    document.getElementById(`${type}PriceDisplay`).textContent = formatPrice(price);
     // Hide hint text
-    const hint = parentLi.querySelector(".car-selection-hint");
+    const hint = parentLi.querySelector(".transfer-selection-hint");
     if (hint) hint.style.display = "none";
   }
   
@@ -704,17 +1225,58 @@ function onPaxChanged() {
   const hotelItem = selectedItems.find(item => item.category === "Hotel");
   if (hotelItem) {
     const perPersonPrice = PRICES.hotelPerNight[hotelItem.type];
-    hotelItem.price = perPersonPrice * adultCount * nightsSelected;
+    const totalPeople = adultCount + childCount;
+    hotelItem.price = perPersonPrice * totalPeople;
     hotelItem.perPersonPrice = perPersonPrice;
   }
   
-  // Update car transfer price if selected
-  if (selectedCar) {
-    const carOption = document.querySelector(`.car-option[data-car="${selectedCar}"]`);
-    if (carOption) {
-      selectCar(carOption);
+  // Update transfer prices if selected
+  if (selectedPickup) {
+    const transferOption = document.querySelector(`.transfer-option[data-type="pickup"][data-transfer="${selectedPickup}"]`);
+    if (transferOption) {
+      selectTransfer(transferOption);
     }
   }
+  
+  if (selectedDrop) {
+    const transferOption = document.querySelector(`.transfer-option[data-type="drop"][data-transfer="${selectedDrop}"]`);
+    if (transferOption) {
+      selectTransfer(transferOption);
+    }
+  }
+  
+  // Update food prices
+  selectedItems.forEach(item => {
+    if (item.category === "Food") {
+      const perPersonPrice = PRICES.food[item.type];
+      item.price = perPersonPrice * adultCount + Math.floor(perPersonPrice * 0.5) * childCount;
+      item.perPersonPrice = perPersonPrice;
+    }
+  });
+  
+  // Update sightseeing prices
+  selectedItems.forEach(item => {
+    if (item.category === "Sightseeing") {
+      const basePrice = PRICES.sightseeingPackage[item.type];
+      let transportPrice = 0;
+      
+      // Special handling for North Goa and South Goa with private bikes
+      if ((item.type === 'northGoa' || item.type === 'southGoa') && item.transport === 'privateBike') {
+        const bikeCount = bikeCounts[item.type] || 1;
+        transportPrice = PRICES.sightseeingTransport[item.transport] * bikeCount;
+      } else if (item.transport === 'privateBike') {
+        const bikeCount = bikeCounts[item.type] || 1;
+        transportPrice = PRICES.sightseeingTransport[item.transport] * bikeCount;
+      } else {
+        transportPrice = item.transport ? PRICES.sightseeingTransport[item.transport] : 0;
+      }
+      
+      const totalPeople = adultCount + (childCount * 0.5);
+      
+      item.price = (basePrice + transportPrice) * totalPeople;
+      item.transportPrice = transportPrice * totalPeople;
+    }
+  });
   
   updateSummary();
 }
@@ -726,11 +1288,9 @@ function handleItemClick(item) {
   const itemPrice = Number(item.getAttribute("data-price")) || 0;
   const category = item.getAttribute("data-category") || "Others";
   const isHotel = item.classList.contains("hotel-option");
-  const isTransport = item.classList.contains("transport-option");
   const isFood = item.classList.contains("food-option");
   const isSightseeing = item.classList.contains("toggle-sublist") && item.getAttribute("data-category") === "Sightseeing";
   const isOtherActivity = item.classList.contains("toggle-sublist") && item.getAttribute("data-category") === "Other Activities";
-  const perDayTransport = isTransport && item.getAttribute("data-per-day") === "true";
   const type = item.getAttribute("data-type") || item.getAttribute("data-package");
 
   if (item.classList.contains("selected")) {
@@ -744,9 +1304,10 @@ function handleItemClick(item) {
       document.querySelectorAll('.hotel-option.selected').forEach(el => el.classList.remove('selected')); 
       selectedItems = selectedItems.filter(i => i.category !== "Hotel"); 
       
-      // Calculate total hotel price for adults only for now
+      // Calculate total hotel price for all people (adults + children)
       const perPersonPrice = PRICES.hotelPerNight[type];
-      const totalHotelPrice = perPersonPrice * adultCount * nightsSelected;
+      const totalPeople = adultCount + childCount;
+      const totalHotelPrice = perPersonPrice * totalPeople;
       
       // Add to selected items with calculated total price
       selectedItems.push({ 
@@ -761,12 +1322,43 @@ function handleItemClick(item) {
     // For food option, toggle selection
     if (isFood) {
       item.classList.add("selected");
-      selectedItems = selectedItems.filter(i => i.category !== "Food");
-      selectedItems.push({ name: itemName, price: 0, category: category, type: type });
-    } else if (!isHotel) {
+      selectedItems = selectedItems.filter(i => i.category !== "Food" || i.type !== type);
+      
+      const perPersonPrice = PRICES.food[type];
+      const totalPrice = perPersonPrice * adultCount + Math.floor(perPersonPrice * 0.5) * childCount;
+      
+      selectedItems.push({ 
+        name: itemName, 
+        price: totalPrice, 
+        category: category, 
+        type: type,
+        perPersonPrice: perPersonPrice
+      });
+    } else if (!isHotel && !isFood) {
       item.classList.add("selected");
       selectedItems = selectedItems.filter(i => i.name !== itemName);
-      selectedItems.push({ name: itemName, price: itemPrice, category: category, perDay: perDayTransport, type: type });
+      
+      // For sightseeing, add with default transport (own transfer)
+      if (isSightseeing) {
+        const basePrice = PRICES.sightseeingPackage[type];
+        const transportPrice = 0; // Default to own transfer
+        const totalPeople = adultCount + (childCount * 0.5);
+        
+        selectedItems.push({ 
+          name: itemName, 
+          price: (basePrice + transportPrice) * totalPeople, 
+          category: category, 
+          type: type,
+          transport: 'ownTransfer',
+          transportPrice: 0,
+          bikeCount: 0
+        });
+        
+        // Initialize transport selection
+        selectedSightseeingTransport[type] = 'ownTransfer';
+      } else {
+        selectedItems.push({ name: itemName, price: itemPrice, category: category, type: type });
+      }
     }
   }
 
@@ -779,54 +1371,55 @@ function handleItemClick(item) {
 
 // --- DYNAMIC UI UPDATES ---
 function updateDynamicPrices() {
-  // Update hotel prices based on adults and nights
+  // Update hotel prices based on total people (adults + children)
   document.querySelectorAll(".hotel-option").forEach(el => {
     const type = el.getAttribute("data-type");
     if (type && PRICES.hotelPerNight[type]) {
-      // Calculate total price for all adults for all nights
+      // Calculate total price for all people
       const perPersonPrice = PRICES.hotelPerNight[type];
-      const totalPrice = perPersonPrice * adultCount * nightsSelected;
+      const totalPeople = adultCount + childCount;
+      const totalPrice = perPersonPrice * totalPeople;
       el.setAttribute("data-price", totalPrice); 
       const priceSpan = el.querySelector(".item-price");
       if (priceSpan) {
-        // Keep showing base price in the display, not the total
-        priceSpan.textContent = formatPrice(PRICES.hotelPerNight[type]);
+        // Keep showing per person price in display
+        priceSpan.textContent = formatPrice(PRICES.hotelPerNight[type]) + " per person";
       }
-    }
-  });
-
-  document.querySelectorAll(".transport-option").forEach(el => {
-    const key = el.getAttribute("data-key");
-    const basePrice = Number(el.getAttribute("data-base-price"));
-    const perDay = el.getAttribute("data-per-day") === "true";
-    
-    let price;
-    if (key === "flight" || key === "train") {
-      // For flight and train, calculate based on adults and children
-      price = basePrice * adultCount + Math.floor(basePrice * 0.5) * childCount;
-    } else if (perDay) {
-      // For per-day options
-      price = (basePrice * adultCount + Math.floor(basePrice / 2) * childCount) * daysSelected;
-    } else {
-      // For one-time options
-      price = basePrice;
-    }
-    
-    el.setAttribute("data-price", price); 
-    const priceSpan = el.querySelector(".item-price");
-    if (priceSpan) {
-      priceSpan.textContent = formatPrice(price);
     }
   });
 
   document.querySelectorAll('[data-category="Sightseeing"]').forEach(el => {
     const packageKey = el.getAttribute('data-package');
-    if (packageKey && PRICES.sightseeingPackage[packageKey]) {
-      const price = PRICES.sightseeingPackage[packageKey] * (adultCount + (childCount * 0.5));
+    if (packageKey && PRICES.sightseeingPackage[packageKey] !== undefined) {
+      const basePrice = PRICES.sightseeingPackage[packageKey];
+      let transportPrice = 0;
+      
+      // Special handling for North Goa and South Goa with private bikes
+      if ((packageKey === 'northGoa' || packageKey === 'southGoa') && selectedSightseeingTransport[packageKey] === 'privateBike') {
+        const bikeCount = bikeCounts[packageKey] || 1;
+        transportPrice = PRICES.sightseeingTransport.privateBike * bikeCount;
+      } else if (selectedSightseeingTransport[packageKey]) {
+        transportPrice = PRICES.sightseeingTransport[selectedSightseeingTransport[packageKey]];
+      }
+      
+      const totalPeople = adultCount + (childCount * 0.5);
+      
+      const price = (basePrice + transportPrice) * totalPeople;
       el.setAttribute("data-price", Math.round(price));
       const priceSpan = el.querySelector(".item-price");
       if (priceSpan) {
-        priceSpan.textContent = formatPrice(Math.round(price));
+        // For North Goa and South Goa, show bike count if private bike is selected
+        if (packageKey === 'northGoa' || packageKey === 'southGoa') {
+          if (selectedSightseeingTransport[packageKey] === 'privateBike') {
+            const bikeCount = bikeCounts[packageKey] || 1;
+            const bikePrice = PRICES.sightseeingTransport.privateBike * bikeCount;
+            priceSpan.textContent = `${bikeCount} Bike${bikeCount > 1 ? 's' : ''} (${formatPrice(bikePrice)})`;
+          } else {
+            priceSpan.textContent = "Free";
+          }
+        } else {
+          priceSpan.textContent = formatPrice(Math.round(price));
+        }
       }
     }
   });
@@ -868,9 +1461,61 @@ function updateSummary() {
       if (item.price > 0) {
         // For hotel, show per person rate and total
         if (category === "Hotel" && item.perPersonPrice) {
-          line += ` (${formatPrice(item.perPersonPrice)} × ${adultCount} adults × ${nightsSelected} nights = ${formatPrice(item.price)})`;
+          const totalPeople = adultCount + childCount;
+          line += ` (${formatPrice(item.perPersonPrice)} × ${totalPeople} people = ${formatPrice(item.price)})`;
+        } else if (category === "Food" && item.perPersonPrice) {
+          const childPrice = Math.floor(item.perPersonPrice * 0.5);
+          line += ` (${formatPrice(item.perPersonPrice)} × ${adultCount} adults`;
+          if (childCount > 0) {
+            line += ` + ${formatPrice(childPrice)} × ${childCount} children`;
+          }
+          line += ` = ${formatPrice(item.price)})`;
+        } else if (category === "Sightseeing") {
+          const basePrice = PRICES.sightseeingPackage[item.type];
+          const totalPeople = adultCount + (childCount * 0.5);
+          
+          // Special handling for free tours
+          if (basePrice === 0) {
+            line += ` (Free tour`;
+            if (item.transport && item.transport !== 'ownTransfer') {
+              if (item.transport === 'privateBike' && item.bikeCount > 0) {
+                line += ` + ${formatPrice(PRICES.sightseeingTransport.privateBike)} × ${item.bikeCount} bike${item.bikeCount > 1 ? 's' : ''}`;
+              } else {
+                line += ` + ${formatPrice(PRICES.sightseeingTransport[item.transport])} × ${totalPeople} people for ${item.transport}`;
+              }
+            }
+            line += ` = ${formatPrice(item.price)})`;
+          } else {
+            line += ` (${formatPrice(basePrice)} × ${totalPeople} people`;
+            if (item.transport && item.transport !== 'ownTransfer') {
+              if (item.transport === 'privateBike' && item.bikeCount > 0) {
+                line += ` + ${formatPrice(PRICES.sightseeingTransport.privateBike)} × ${item.bikeCount} bike${item.bikeCount > 1 ? 's' : ''}`;
+              } else {
+                line += ` + ${formatPrice(PRICES.sightseeingTransport[item.transport])} × ${totalPeople} people for ${item.transport}`;
+              }
+            }
+            line += ` = ${formatPrice(item.price)})`;
+          }
+        } else if (category === "Transportation" && (item.key === 'pickup' || item.key === 'drop')) {
+          line += ` (${formatPrice(PRICES.transportation[item.key])} × ${adultCount} adults = ${formatPrice(item.price)})`;
         } else {
           line += ` (${formatPrice(item.price)})`;
+        }
+      } else {
+        // For free items
+        if (category === "Sightseeing" && PRICES.sightseeingPackage[item.type] === 0) {
+          line += ` (Free tour`;
+          if (item.transport && item.transport !== 'ownTransfer') {
+            if (item.transport === 'privateBike' && item.bikeCount > 0) {
+              line += ` + ${formatPrice(PRICES.sightseeingTransport.privateBike)} × ${item.bikeCount} bike${item.bikeCount > 1 ? 's' : ''}`;
+            } else {
+              const totalPeople = adultCount + (childCount * 0.5);
+              line += ` + ${formatPrice(PRICES.sightseeingTransport[item.transport])} × ${totalPeople} people for ${item.transport}`;
+            }
+          }
+          line += ` = ${formatPrice(item.price)})`;
+        } else {
+          line += ` (Free)`;
         }
       }
       html += `<div class="summary-item" data-category="${item.category}" data-type="${item.type}">${line}</div>`;
@@ -898,17 +1543,32 @@ function updateSummary() {
 
 function clearSelectionsExceptDaysAndPax() {
   document.querySelectorAll('.panel li.selected').forEach(el => { if (!el.closest("#daysList")) el.classList.remove('selected'); });
+  document.querySelectorAll('.food-option.selected').forEach(el => el.classList.remove('selected'));
   selectedItems = [];
-  selectedCar = "";
+  selectedPickup = "";
+  selectedDrop = "";
+  selectedSightseeingTransport = {};
+  bikeCounts = {};
   
-  // Reset car selection hint
-  const carLi = document.querySelector('[data-key="carTransfer"]');
-  if (carLi) {
-    carLi.classList.remove("selected");
-    document.getElementById("carPriceDisplay").textContent = "";
-    const hint = carLi.querySelector(".car-selection-hint");
+  // Reset transfer selection hints
+  document.querySelectorAll('[data-key="pickup"], [data-key="drop"]').forEach(li => {
+    li.classList.remove("selected");
+    const key = li.getAttribute('data-key');
+    document.getElementById(`${key}PriceDisplay`).textContent = "";
+    const hint = li.querySelector(".transfer-selection-hint");
     if (hint) hint.style.display = "block";
-  }
+  });
+  
+  // Reset North Goa and South Goa displays
+  ['northGoa', 'southGoa'].forEach(packageKey => {
+    const tourElement = document.querySelector(`[data-package="${packageKey}"]`);
+    if (tourElement) {
+      const priceSpan = tourElement.querySelector('.item-price');
+      if (priceSpan) {
+        priceSpan.textContent = "Free";
+      }
+    }
+  });
 }
 
 // --- DETAIL DISPLAY FUNCTIONS ---
@@ -1027,4 +1687,3 @@ window.onload = function() { showTrips(); };
 </script>   <!-- closes the JS tag only here -->
 </body>
 </html>
-
