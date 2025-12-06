@@ -493,12 +493,12 @@ const sightseeingPlaces = {
     { name: "Vagator Beach", image: "Vagator Beach.jpeg" }
   ],
   southGoa: [
-    { name: "Miramar Beach", image: "https://picsum.photos/seed/miramarbeach/160/120.jpg" },
-    { name: "Tirupathi Balaji Temple", image: "https://picsum.photos/seed/tirupathibalaji/160/120.jpg" },
-    { name: "Se Cathedral Church", image: "https://picsum.photos/seed/secathedral/160/120.jpg" },
-    { name: "Old Goa Church", image: "https://picsum.photos/seed/oldgoachurch2/160/120.jpg" },
-    { name: "Dolphin Sightseeing", image: "https://picsum.photos/seed/dolphin/160/120.jpg" },
-    { name: "Mangeshi Temple", image: "https://picsum.photos/seed/mangeshitemple/160/120.jpg" },
+    { name: "Miramar Beach", image: "Miramar Beach.jpeg" },
+    { name: "Tirupathi Balaji Temple", image: "Tirupathi Balaji Temple.jpg" },
+    { name: "Se Cathedral Church", image: "Se Cathedral Church.jpeg" },
+    { name: "Old Goa Church", image: "oldgoachruch.jpeg" },
+    { name: "Dolphin Sightseeing", image: "Dolphin Sightseeing.jpeg" },
+    { name: "Mangeshi Temple", image: "Mangeshi Temple.jpeg" },
   ],
   grandIslandFullDay: [
     { name: "Scuba Diving", image: "Scuba Diving.jpeg" },
@@ -507,7 +507,7 @@ const sightseeingPlaces = {
     { name: "Bumper Ride", image: "Bumper Ride.webp" },
     { name: "Snorkeling", image: "Snorkeling.png" },
     { name: "Parasailing", image: "parasailing.jpeg" },
-    { name: "Speed Boat Ride", image: "https://picsum.photos/seed/speedboat/160/120.jpg" }
+    { name: "Speed Boat Ride", image: "Speedboat.png" }
   ],
   grandIslandHalfDay: [
     { name: "Scuba Diving", image: "Scuba Diving.jpeg" },
@@ -516,7 +516,7 @@ const sightseeingPlaces = {
     { name: "Bumper Ride", image: "Bumper Ride.webp" },
     { name: "Snorkeling", image: "Snorkeling.png" },
     { name: "Parasailing", image: "parasailing.jpeg" },
-    { name: "Speed Boat Ride", image: "https://picsum.photos/seed/speedboat2/160/120.jpg" }
+    { name: "Speed Boat Ride", image: "Speedboat.png" }
   ],
   malvanFullDay: [
     { name: "Scuba Diving", image: "Scuba Diving.jpeg" },
@@ -598,7 +598,7 @@ function showTrips() {
 function loadGoaSelection() {
   document.getElementById("mainContent").innerHTML = `
     <div class="selection-container" id="selectionContainer">
-      <img src="goabeach.png" />
+      <img src="" />
       <div class="trip-title">Goa Trip</div>
       <button class="accordion">Days / Nights</button>
       <div class="panel"><ul id="daysList"><li data-days="3" data-nights="2">2 Nights / 3 Days</li><li data-days="4" data-nights="3">3 Nights / 4 Days</li><li data-days="5" data-nights="4">4 Nights / 5 Days</li></ul></div>
@@ -1685,6 +1685,7 @@ window.onload = function() { showTrips(); };
 </script>   <!-- closes the JS tag only here -->
 </body>
 </html>
+
 
 
 
