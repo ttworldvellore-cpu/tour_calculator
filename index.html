@@ -344,6 +344,41 @@
     margin-left: 10px;
   }
   
+  /* Cab selection styling */
+  .cab-selection {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f0f7ff;
+    border-radius: 6px;
+    display: none;
+  }
+  .cab-selection.show {
+    display: block;
+  }
+  .cab-selection-label {
+    font-size: 0.9rem;
+    color: #003a78;
+    margin-bottom: 5px;
+    font-weight: 600;
+  }
+  .cab-input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cab-input {
+    width: 60px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+  }
+  .cab-price-display {
+    font-size: 0.85rem;
+    color: #666;
+    margin-left: 10px;
+  }
+  
   /* Food options styling */
   .food-option {
     display: flex;
@@ -437,6 +472,7 @@ let selectedDrop = ""; // Track selected drop
 let selectedSightseeingTransport = {}; // Track transport for each sightseeing
 let currentSightseeingSlides = {}; // Track current slide for each sightseeing
 let bikeCounts = {}; // Track bike counts for each transport selection
+let cabCounts = {}; // Track cab counts for each transport selection
 
 // --- PRICING & DATA CONSTANTS ---
 const PRICES = {
@@ -452,8 +488,8 @@ const PRICES = {
   sightseeingTransport: {
     ownTransfer: 0,
     privateBike: 500, // Changed to 500 per bike as requested
-    cabWithDriver: 1500,
-    cabWithoutDriver: 1000
+    cabWithDriver: 2000, // Updated to 2000 per cab as requested
+    cabWithoutDriver: 1800 // Updated to 1800 per cab as requested
   },
   sightseeingPackage: { 
     northGoa: 0, // Changed from 500 to 0 as requested
@@ -484,41 +520,40 @@ const PRICES = {
 // Sightseeing places data with images
 const sightseeingPlaces = {
   northGoa: [
-    { name: "Fort Aguada", image: "https://picsum.photos/seed/fortaguada/160/120.jpg" },
-    { name: "Saligao Church", image: "https://picsum.photos/seed/saligaochurch/160/120.jpg" },
-    { name: "Sinquirim Beach", image: "https://picsum.photos/seed/sinquirimbeach/160/120.jpg" },
-    { name: "Baga Beach", image: "https://picsum.photos/seed/bagabeach/160/120.jpg" },
-    { name: "Old Goa Church", image: "https://picsum.photos/seed/oldgoachurch/160/120.jpg" },
-    { name: "Anjuna Beach", image: "https://picsum.photos/seed/anjunabeach/160/120.jpg" },
-    { name: "Vagator Beach", image: "https://picsum.photos/seed/vagatorbeach/160/120.jpg" },
-    { name: "Aguada", image: "https://picsum.photos/seed/aguada/160/120.jpg" }
+    { name: "Fort Aguada", image: "Fort Aguada.jpeg" },
+    { name: "Saligao Church", image: "saligao church.jpeg" },
+    { name: "Sinquirim Beach", image: "Sinquirim Beach.jpeg" },
+    { name: "Baga Beach", image: "Bagabeach.jpeg" },
+    { name: "Old Goa Church", image: "oldgoachruch.jpeg" },
+    { name: "Anjuna Beach", image: "Anjuna Beach.jpeg" },
+    { name: "Vagator Beach", image: "Vagator Beach.jpeg" }
   ],
   southGoa: [
     { name: "Miramar Beach", image: "https://picsum.photos/seed/miramarbeach/160/120.jpg" },
-    { name: "Tirupathi Balaji Temple", image: "https://picsum.photos/seed/tirupathibalaji/160/120.jpg" },
+    { name: "Basilica of bom Jesus", image: "https://picsum.photos/seed/tirupathibalaji/160/120.jpg" },
     { name: "Se Cathedral Church", image: "https://picsum.photos/seed/secathedral/160/120.jpg" },
-    { name: "Old Goa Church", image: "https://picsum.photos/seed/oldgoachurch2/160/120.jpg" },
+    { name: "Shantadurga Temple", image: "oldgoachruch.jpeg" },
     { name: "Dolphin Sightseeing", image: "https://picsum.photos/seed/dolphin/160/120.jpg" },
     { name: "Mangeshi Temple", image: "https://picsum.photos/seed/mangeshitemple/160/120.jpg" },
-    { name: "Boat Cruise at Mandovi River", image: "https://picsum.photos/seed/boatcruise/160/120.jpg" }
+    { name: "Boat Cruise De goa", image: "https://picsum.photos/seed/boatcruise/160/120.jpg" }
   ],
   grandIslandFullDay: [
-    { name: "Scuba Diving", image: "https://picsum.photos/seed/scubadiving/160/120.jpg" },
-    { name: "Jet Ski", image: "https://picsum.photos/seed/jetski/160/120.jpg" },
-    { name: "Banana Boat", image: "https://picsum.photos/seed/bananaboat/160/120.jpg" },
-    { name: "Bumper Ride", image: "https://picsum.photos/seed/bumperride/160/120.jpg" },
-    { name: "Snorkeling", image: "https://picsum.photos/seed/snorkeling/160/120.jpg" },
-    { name: "Parasailing", image: "https://picsum.photos/seed/parasailing/160/120.jpg" },
-    { name: "Speed Boat Ride", image: "https://picsum.photos/seed/speedboat/160/120.jpg" }
+    { name: "Scuba Diving", image: "Scuba Diving.jpeg" },
+    { name: "Jet Ski", image: "Jet Ski.jpeg" },
+    { name: "Banana Boat", image: "Banana Boat.jpeg" },
+    { name: "Bumper Ride", image: "Bumper Ride.webp" },
+    { name: "Snorkeling", image: "Snorkeling.png" },
+    { name: "Parasailing", image: "parasailing.jpeg" },
+    { name: "Speed Boat Ride", image: "Dudhsagar Waterfalls.jpeg" }
   ],
   grandIslandHalfDay: [
-    { name: "Scuba Diving", image: "https://picsum.photos/seed/scubadiving2/160/120.jpg" },
-    { name: "Jet Ski", image: "https://picsum.photos/seed/jetski2/160/120.jpg" },
-    { name: "Banana Boat", image: "https://picsum.photos/seed/bananaboat2/160/120.jpg" },
-    { name: "Bumper Ride", image: "https://picsum.photos/seed/bumperride2/160/120.jpg" },
-    { name: "Snorkeling", image: "https://picsum.photos/seed/snorkeling2/160/120.jpg" },
-    { name: "Parasailing", image: "https://picsum.photos/seed/parasailing2/160/120.jpg" },
-    { name: "Speed Boat Ride", image: "https://picsum.photos/seed/speedboat2/160/120.jpg" }
+    { name: "Scuba Diving", image: "Scuba Diving.jpeg" },
+    { name: "Jet Ski", image: "Jet Ski.jpeg" },
+    { name: "Banana Boat", image: "Banana Boat.jpeg" },
+    { name: "Bumper Ride", image: "Bumper Ride.webp" },
+    { name: "Snorkeling", image: "Snorkeling.png" },
+    { name: "Parasailing", image: "parasailing.jpeg" },
+    { name: "Speed Boat Ride", image: "Dudhsagar Waterfalls.jpeg" }
   ],
   malvanFullDay: [
     { name: "Elephant Bath", image: "https://picsum.photos/seed/elephantbath/160/120.jpg" },
@@ -535,9 +570,8 @@ const sightseeingPlaces = {
     { name: "Dudhsagar Waterfalls", image: "https://picsum.photos/seed/dudhsagar2/160/120.jpg" }
   ],
   dudhsagarWaterfalls: [
-    { name: "Dudhsagar Waterfalls", image: "https://picsum.photos/seed/dudhsagar3/160/120.jpg" },
-    { name: "Waterfall Viewpoint", image: "https://picsum.photos/seed/waterfall/160/120.jpg" },
-    { name: "Forest Trail", image: "https://picsum.photos/seed/foresttrail/160/120.jpg" }
+    { name: "Dudhsagar Waterfalls", image: "Dudhsagar Waterfalls.jpeg" },
+    { name: "Waterfall Viewpoint", image: "Dudhsagar Waterfalls.jpeg" },
   ]
 };
 
@@ -585,7 +619,7 @@ function showTrips() {
     <h2>Explore Our Tour Packages ✈️</h2>
     <div class='trip-section'>
       <div class='trip-card'>
-        <img src='https://picsum.photos/seed/goabeach/260/150.jpg' alt='Goa Beach'/>
+        <img src='goabeach.png' alt='Goa Beach'/>
         <div class='trip-info'>
           <h4>Goa Beach Getaway</h4>
           <p>Enjoy sunny beaches, nightlife, and heritage.</p>
@@ -600,7 +634,7 @@ function showTrips() {
 function loadGoaSelection() {
   document.getElementById("mainContent").innerHTML = `
     <div class="selection-container" id="selectionContainer">
-      <img src="https://picsum.photos/seed/goabeachbanner/600/220.jpg" alt="Goa Beach" class="trip-banner" />
+      <img src="goabeach.png" alt="Goa Beach" class="trip-banner" />
       <div class="trip-title">Goa Trip</div>
       <button class="accordion">Days / Nights</button>
       <div class="panel"><ul id="daysList"><li data-days="3" data-nights="2">2 Nights / 3 Days</li><li data-days="4" data-nights="3">3 Nights / 4 Days</li><li data-days="5" data-nights="4">4 Nights / 5 Days</li></ul></div>
@@ -896,6 +930,15 @@ function addSightseeingContent(titleElement, packageKey) {
         <span class="bike-price-display" id="bike-price-${packageKey}">₹500</span>
       </div>
     </div>
+    <div class="cab-selection" id="cab-selection-${packageKey}">
+      <div class="cab-selection-label">Number of Cabs (₹2000 per cab with driver / ₹1800 per cab without driver):</div>
+      <div class="cab-input-group">
+        <button class="btn-decrement" onclick="decrementCab('${packageKey}')">-</button>
+        <input type="number" id="cab-count-${packageKey}" class="cab-input" min="1" max="10" value="1">
+        <button class="btn-increment" onclick="incrementCab('${packageKey}')">+</button>
+        <span class="cab-price-display" id="cab-price-${packageKey}">₹2000</span>
+      </div>
+    </div>
   `;
   
   // Insert after existing list items (which are now empty)
@@ -920,12 +963,19 @@ function addSightseeingContent(titleElement, packageKey) {
     bikeInput.addEventListener('change', () => updateBikeCount(packageKey));
   }
   
+  // Add event listener for cab count input
+  const cabInput = transportSection.querySelector(`#cab-count-${packageKey}`);
+  if (cabInput) {
+    cabInput.addEventListener('input', () => updateCabCount(packageKey));
+    cabInput.addEventListener('change', () => updateCabCount(packageKey));
+  }
+  
   // Check if a transport option was previously selected for this package
   if (selectedSightseeingTransport[packageKey]) {
     const selectedBtn = transportSection.querySelector(`[data-transport="${selectedSightseeingTransport[packageKey]}"]`);
     if (selectedBtn) {
       selectedBtn.classList.add('selected');
-      // Show bike selection if private bike is selected
+      // Show appropriate selection based on transport type
       if (selectedSightseeingTransport[packageKey] === 'privateBike') {
         const bikeSelection = transportSection.querySelector(`#bike-selection-${packageKey}`);
         if (bikeSelection) {
@@ -934,6 +984,15 @@ function addSightseeingContent(titleElement, packageKey) {
           const savedCount = bikeCounts[packageKey] || 1;
           bikeInput.value = savedCount;
           updateBikePrice(packageKey);
+        }
+      } else if (selectedSightseeingTransport[packageKey] === 'cabWithDriver' || selectedSightseeingTransport[packageKey] === 'cabWithoutDriver') {
+        const cabSelection = transportSection.querySelector(`#cab-selection-${packageKey}`);
+        if (cabSelection) {
+          cabSelection.classList.add('show');
+          // Set cab count from saved value
+          const savedCount = cabCounts[packageKey] || 1;
+          cabInput.value = savedCount;
+          updateCabPrice(packageKey);
         }
       }
     }
@@ -971,6 +1030,9 @@ function updateBikeCount(packageKey) {
     bikeCounts[packageKey] = count;
     updateBikePrice(packageKey);
     updateSightseeingTransportInSelection(packageKey, 'privateBike');
+    
+    // Update display for North Goa and South Goa
+    updateNorthSouthGoaDisplay(packageKey);
   }
 }
 
@@ -979,6 +1041,81 @@ function updateBikePrice(packageKey) {
   const priceDisplay = document.getElementById(`bike-price-${packageKey}`);
   if (priceDisplay) {
     priceDisplay.textContent = formatPrice(PRICES.sightseeingTransport.privateBike * count);
+  }
+}
+
+// Cab count functions
+function incrementCab(packageKey) {
+  const input = document.getElementById(`cab-count-${packageKey}`);
+  if (input) {
+    const value = parseInt(input.value) || 0;
+    if (value < 10) {
+      input.value = value + 1;
+      updateCabCount(packageKey);
+    }
+  }
+}
+
+function decrementCab(packageKey) {
+  const input = document.getElementById(`cab-count-${packageKey}`);
+  if (input) {
+    const value = parseInt(input.value) || 0;
+    if (value > 1) {
+      input.value = value - 1;
+      updateCabCount(packageKey);
+    }
+  }
+}
+
+function updateCabCount(packageKey) {
+  const input = document.getElementById(`cab-count-${packageKey}`);
+  if (input) {
+    const count = Math.max(1, parseInt(input.value) || 1);
+    input.value = count;
+    cabCounts[packageKey] = count;
+    updateCabPrice(packageKey);
+    updateSightseeingTransportInSelection(packageKey, selectedSightseeingTransport[packageKey]);
+    
+    // Update display for North Goa and South Goa
+    updateNorthSouthGoaDisplay(packageKey);
+  }
+}
+
+function updateCabPrice(packageKey) {
+  const count = cabCounts[packageKey] || 1;
+  const transportType = selectedSightseeingTransport[packageKey];
+  const pricePerCab = transportType === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver;
+  const priceDisplay = document.getElementById(`cab-price-${packageKey}`);
+  if (priceDisplay) {
+    priceDisplay.textContent = formatPrice(pricePerCab * count);
+  }
+}
+
+// Update display for North Goa and South Goa to show bike/cab count
+function updateNorthSouthGoaDisplay(packageKey) {
+  // Only update for North Goa and South Goa
+  if (packageKey !== 'northGoa' && packageKey !== 'southGoa') return;
+  
+  const tourElement = document.querySelector(`[data-package="${packageKey}"]`);
+  if (!tourElement) return;
+  
+  const priceSpan = tourElement.querySelector('.item-price');
+  if (!priceSpan) return;
+  
+  // Check what transport type is selected
+  if (selectedSightseeingTransport[packageKey] === 'privateBike') {
+    const bikeCount = bikeCounts[packageKey] || 1;
+    const bikePrice = PRICES.sightseeingTransport.privateBike * bikeCount;
+    priceSpan.textContent = `${bikeCount} Bike${bikeCount > 1 ? 's' : ''} (${formatPrice(bikePrice)})`;
+  } else if (selectedSightseeingTransport[packageKey] === 'cabWithDriver' || selectedSightseeingTransport[packageKey] === 'cabWithoutDriver') {
+    const cabCount = cabCounts[packageKey] || 1;
+    const cabType = selectedSightseeingTransport[packageKey];
+    const pricePerCab = cabType === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver;
+    const cabPrice = pricePerCab * cabCount;
+    const cabTypeName = cabType === 'cabWithDriver' ? 'Cab with Driver' : 'Cab without Driver';
+    priceSpan.textContent = `${cabCount} ${cabTypeName} (${formatPrice(cabPrice)})`;
+  } else {
+    priceSpan.textContent = "Free";
   }
 }
 
@@ -1030,10 +1167,17 @@ function selectSightseeingTransport(btn) {
   // Mark current selection
   btn.classList.add('selected');
   
-  // Show/hide bike selection based on transport type
+  // Show/hide selection based on transport type
   const bikeSelection = document.getElementById(`bike-selection-${packageKey}`);
-  if (bikeSelection) {
-    if (transportType === 'privateBike') {
+  const cabSelection = document.getElementById(`cab-selection-${packageKey}`);
+  
+  // Hide all selection options first
+  if (bikeSelection) bikeSelection.classList.remove('show');
+  if (cabSelection) cabSelection.classList.remove('show');
+  
+  // Show appropriate selection
+  if (transportType === 'privateBike') {
+    if (bikeSelection) {
       bikeSelection.classList.add('show');
       // Initialize bike count if not already set
       if (!bikeCounts[packageKey]) {
@@ -1042,13 +1186,25 @@ function selectSightseeingTransport(btn) {
         if (bikeInput) bikeInput.value = 1;
         updateBikePrice(packageKey);
       }
-    } else {
-      bikeSelection.classList.remove('show');
+    }
+  } else if (transportType === 'cabWithDriver' || transportType === 'cabWithoutDriver') {
+    if (cabSelection) {
+      cabSelection.classList.add('show');
+      // Initialize cab count if not already set
+      if (!cabCounts[packageKey]) {
+        cabCounts[packageKey] = 1;
+        const cabInput = document.getElementById(`cab-count-${packageKey}`);
+        if (cabInput) cabInput.value = 1;
+        updateCabPrice(packageKey);
+      }
     }
   }
   
   // Update selected transport
   selectedSightseeingTransport[packageKey] = transportType;
+  
+  // Update display for North Goa and South Goa
+  updateNorthSouthGoaDisplay(packageKey);
   
   // Update selected items
   updateSightseeingTransportInSelection(packageKey, transportType);
@@ -1065,11 +1221,15 @@ function updateSightseeingTransportInSelection(packageKey, transportType) {
     // Update transport type
     sightseeingItem.transport = transportType;
     
-    // Update price if needed
+    // Update price based on transport type
     let transportPrice = 0;
     if (transportType === 'privateBike') {
       const bikeCount = bikeCounts[packageKey] || 1;
       transportPrice = PRICES.sightseeingTransport[transportType] * bikeCount;
+    } else if (transportType === 'cabWithDriver' || transportType === 'cabWithoutDriver') {
+      const cabCount = cabCounts[packageKey] || 1;
+      const pricePerCab = transportType === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver;
+      transportPrice = pricePerCab * cabCount;
     } else {
       transportPrice = PRICES.sightseeingTransport[transportType];
     }
@@ -1080,6 +1240,7 @@ function updateSightseeingTransportInSelection(packageKey, transportType) {
     sightseeingItem.price = (basePrice + transportPrice) * totalPeople;
     sightseeingItem.transportPrice = transportPrice * totalPeople;
     sightseeingItem.bikeCount = transportType === 'privateBike' ? (bikeCounts[packageKey] || 1) : 0;
+    sightseeingItem.cabCount = (transportType === 'cabWithDriver' || transportType === 'cabWithoutDriver') ? (cabCounts[packageKey] || 1) : 0;
   }
   
   updateSummary();
@@ -1231,6 +1392,10 @@ function onPaxChanged() {
       if (item.transport === 'privateBike') {
         const bikeCount = bikeCounts[item.type] || 1;
         transportPrice = PRICES.sightseeingTransport[item.transport] * bikeCount;
+      } else if (item.transport === 'cabWithDriver' || item.transport === 'cabWithoutDriver') {
+        const cabCount = cabCounts[item.type] || 1;
+        const pricePerCab = item.transport === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver;
+        transportPrice = pricePerCab * cabCount;
       } else {
         transportPrice = item.transport ? PRICES.sightseeingTransport[item.transport] : 0;
       }
@@ -1268,7 +1433,7 @@ function handleItemClick(item) {
       document.querySelectorAll('.hotel-option.selected').forEach(el => el.classList.remove('selected')); 
       selectedItems = selectedItems.filter(i => i.category !== "Hotel"); 
       
-      // Calculate total hotel price for all people (adults + children)
+      // Calculate total hotel price for all people
       const perPersonPrice = PRICES.hotelPerNight[type];
       const totalPeople = adultCount + childCount;
       const totalHotelPrice = perPersonPrice * totalPeople;
@@ -1315,7 +1480,8 @@ function handleItemClick(item) {
           type: type,
           transport: 'ownTransfer',
           transportPrice: 0,
-          bikeCount: 0
+          bikeCount: 0,
+          cabCount: 0
         });
         
         // Initialize transport selection
@@ -1335,7 +1501,7 @@ function handleItemClick(item) {
 
 // --- DYNAMIC UI UPDATES ---
 function updateDynamicPrices() {
-  // Update hotel prices based on total people (adults + children)
+  // Update hotel prices based on total people
   document.querySelectorAll(".hotel-option").forEach(el => {
     const type = el.getAttribute("data-type");
     if (type && PRICES.hotelPerNight[type]) {
@@ -1361,6 +1527,10 @@ function updateDynamicPrices() {
       if (selectedSightseeingTransport[packageKey] === 'privateBike') {
         const bikeCount = bikeCounts[packageKey] || 1;
         transportPrice = PRICES.sightseeingTransport.privateBike * bikeCount;
+      } else if (selectedSightseeingTransport[packageKey] === 'cabWithDriver' || selectedSightseeingTransport[packageKey] === 'cabWithoutDriver') {
+        const cabCount = cabCounts[packageKey] || 1;
+        const pricePerCab = selectedSightseeingTransport[packageKey] === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver;
+        transportPrice = pricePerCab * cabCount;
       } else if (selectedSightseeingTransport[packageKey]) {
         transportPrice = PRICES.sightseeingTransport[selectedSightseeingTransport[packageKey]];
       }
@@ -1371,12 +1541,27 @@ function updateDynamicPrices() {
       el.setAttribute("data-price", Math.round(price));
       const priceSpan = el.querySelector(".item-price");
       if (priceSpan) {
-        // For North Goa and South Goa, show "Free" instead of price
+        // For North Goa and South Goa, show bike/cab count if selected
         if (packageKey === 'northGoa' || packageKey === 'southGoa') {
-          priceSpan.textContent = "Free";
+          if (selectedSightseeingTransport[packageKey] === 'privateBike') {
+            const bikeCount = bikeCounts[packageKey] || 1;
+            const bikePrice = PRICES.sightseeingTransport.privateBike * bikeCount;
+            priceSpan.textContent = `${bikeCount} Bike${bikeCount > 1 ? 's' : ''} (${formatPrice(bikePrice)})`;
+          } else if (selectedSightseeingTransport[packageKey] === 'cabWithDriver' || selectedSightseeingTransport[packageKey] === 'cabWithoutDriver') {
+            const cabCount = cabCounts[packageKey] || 1;
+            const cabType = selectedSightseeingTransport[packageKey];
+            const pricePerCab = cabType === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver;
+            const cabPrice = pricePerCab * cabCount;
+            const cabTypeName = cabType === 'cabWithDriver' ? 'Cab with Driver' : 'Cab without Driver';
+            priceSpan.textContent = `${cabCount} ${cabTypeName} (${formatPrice(cabPrice)})`;
+          } else {
+            priceSpan.textContent = "Free";
+          }
         } else {
           priceSpan.textContent = formatPrice(Math.round(price));
         }
+      } else {
+        priceSpan.textContent = formatPrice(Math.round(price));
       }
     }
   });
@@ -1437,6 +1622,10 @@ function updateSummary() {
             if (item.transport && item.transport !== 'ownTransfer') {
               if (item.transport === 'privateBike' && item.bikeCount > 0) {
                 line += ` + ${formatPrice(PRICES.sightseeingTransport.privateBike)} × ${item.bikeCount} bike${item.bikeCount > 1 ? 's' : ''}`;
+              } else if ((item.transport === 'cabWithDriver' || item.transport === 'cabWithoutDriver') && item.cabCount > 0) {
+                const cabType = item.transport;
+                const pricePerCab = cabType === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver;
+                line += ` + ${formatPrice(pricePerCab)} × ${item.cabCount} ${cabType}`;
               } else {
                 line += ` + ${formatPrice(PRICES.sightseeingTransport[item.transport])} × ${totalPeople} people for ${item.transport}`;
               }
@@ -1447,6 +1636,10 @@ function updateSummary() {
             if (item.transport && item.transport !== 'ownTransfer') {
               if (item.transport === 'privateBike' && item.bikeCount > 0) {
                 line += ` + ${formatPrice(PRICES.sightseeingTransport.privateBike)} × ${item.bikeCount} bike${item.bikeCount > 1 ? 's' : ''}`;
+              } else if ((item.transport === 'cabWithDriver' || item.transport === 'cabWithoutDriver') && item.cabCount > 0) {
+                const cabType = item.transport;
+                const pricePerCab = cabType === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver;
+                line += ` + ${formatPrice(pricePerCab)} × ${item.cabCount} ${cabType}`;
               } else {
                 line += ` + ${formatPrice(PRICES.sightseeingTransport[item.transport])} × ${totalPeople} people for ${item.transport}`;
               }
@@ -1465,6 +1658,10 @@ function updateSummary() {
           if (item.transport && item.transport !== 'ownTransfer') {
             if (item.transport === 'privateBike' && item.bikeCount > 0) {
               line += ` + ${formatPrice(PRICES.sightseeingTransport.privateBike)} × ${item.bikeCount} bike${item.bikeCount > 1 ? 's' : ''}`;
+            } else if ((item.transport === 'cabWithDriver' || item.transport === 'cabWithoutDriver') && item.cabCount > 0) {
+              const cabType = item.transport;
+              const pricePerCab = cabType === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver;
+              line += ` + ${formatPrice(pricePerCab)} × ${item.cabCount} ${cabType}`;
             } else {
               const totalPeople = adultCount + (childCount * 0.5);
               line += ` + ${formatPrice(PRICES.sightseeingTransport[item.transport])} × ${totalPeople} people for ${item.transport}`;
@@ -1506,6 +1703,7 @@ function clearSelectionsExceptDaysAndPax() {
   selectedDrop = "";
   selectedSightseeingTransport = {};
   bikeCounts = {};
+  cabCounts = {};
   
   // Reset transfer selection hints
   document.querySelectorAll('[data-key="pickup"], [data-key="drop"]').forEach(li => {
@@ -1514,6 +1712,17 @@ function clearSelectionsExceptDaysAndPax() {
     document.getElementById(`${key}PriceDisplay`).textContent = "";
     const hint = li.querySelector(".transfer-selection-hint");
     if (hint) hint.style.display = "block";
+  });
+  
+  // Reset North Goa and South Goa displays
+  ['northGoa', 'southGoa'].forEach(packageKey => {
+    const tourElement = document.querySelector(`[data-package="${packageKey}"]`);
+    if (tourElement) {
+      const priceSpan = tourElement.querySelector('.item-price');
+      if (priceSpan) {
+        priceSpan.textContent = "Free";
+      }
+    }
   });
 }
 
