@@ -50,9 +50,9 @@
   @keyframes drift { 0% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } 100% { transform: translateY(0) rotate(0deg); } }
   /* --- END APP BACKGROUND ELEMENTS --- */
 
-  /* --- MAP POPUP MODAL --- */
-  .map-popup-modal {
-    display: none; /* Hidden by default */
+  /* --- MODAL STYLES (Map, Image, Amenities) --- */
+  .modal-base {
+    display: none; 
     position: fixed;
     z-index: 3000;
     left: 0;
@@ -64,22 +64,24 @@
     align-items: center;
     flex-direction: column;
   }
-  .map-popup-modal.active { display: flex; }
+  .modal-base.active { display: flex; }
   
-  .map-modal-content {
+  .modal-content-base {
     background: white;
     width: 90%;
     max-width: 800px;
-    height: 70vh;
     border-radius: 12px;
     position: relative;
     box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    animation: fadeIn 0.3s ease;
   }
-  
-  .map-modal-header {
+
+  @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+  .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -87,9 +89,9 @@
     background: #007acc;
     color: white;
   }
-  .map-modal-title { margin: 0; font-size: 1.2rem; font-weight: 600; }
+  .modal-title { margin: 0; font-size: 1.2rem; font-weight: 600; }
   
-  .map-close-btn {
+  .modal-close-btn {
     background: rgba(255,255,255,0.2);
     border: none;
     color: white;
@@ -103,33 +105,50 @@
     justify-content: center;
     transition: background 0.2s;
   }
-  .map-close-btn:hover { background: rgba(255,255,255,0.4); }
+  .modal-close-btn:hover { background: rgba(255,255,255,0.4); }
 
-  #mapIframe {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    flex-grow: 1;
+  /* Map Specifics */
+  .map-modal-content { height: 70vh; }
+  #mapIframe { width: 100%; height: 100%; border: 0; flex-grow: 1; }
+
+  /* Amenities Specifics */
+  .amenities-modal-content { 
+    max-width: 600px; 
+    max-height: 80vh; 
   }
-  /* --- END MAP POPUP --- */
-
-  /* --- IMAGE POPUP MODAL --- */
-  .image-popup-modal {
-    display: none;
-    position: fixed;
-    z-index: 3000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.85);
-    justify-content: center;
+  .amenities-body {
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 60vh;
+  }
+  .amenity-category {
+    font-weight: 700;
+    color: #003a78;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #e6f2ff;
+    padding-bottom: 5px;
+  }
+  .amenity-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .amenity-item {
+    background: #f0f7ff;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    display: flex;
     align-items: center;
-    flex-direction: column;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    gap: 8px;
+    color: #333;
   }
-  .image-popup-modal.active { display: flex; opacity: 1; }
+  .amenity-icon { color: #007acc; font-size: 1.1rem; }
+
+  /* Image Popup Specifics */
+  .image-popup-modal { background-color: rgba(0,0,0,0.85); opacity: 0; transition: opacity 0.3s ease; }
+  .image-popup-modal.active { opacity: 1; }
   .popup-close {
     position: absolute;
     top: 20px;
@@ -144,7 +163,6 @@
   .popup-close:hover { color: #007acc; }
   .popup-image-content { max-width: 90%; max-height: 80%; border-radius: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.2); object-fit: contain; }
   .popup-caption { color: #fff; margin-top: 15px; font-size: 1.5rem; text-align: center; }
-  /* --- END IMAGE POPUP --- */
 
   /* HEADER */
   header.tt-header {
@@ -168,8 +186,11 @@
   .hamburger { font-size: 26px; cursor: pointer; padding: 8px 12px; background: #005fa3; color: white; border: none; border-radius: 6px; }
   .sidebar { position: fixed; left: -250px; top: 70px; height: calc(100% - 70px); width: 250px; background: rgba(0, 58, 120, 0.98); color: white; transition: all 0.3s ease; padding-top: 10px; box-shadow: 3px 0 10px rgba(0,0,0,0.2); z-index: 1000; }
   .sidebar.active { left: 0; }
-  .sidebar a { display: block; padding: 15px 25px; color: white; text-decoration: none; font-size: 16px; }
+  .sidebar a { display: flex; align-items: center; gap: 12px; padding: 15px 25px; color: white; text-decoration: none; font-size: 16px; }
   .sidebar a:hover { background: #0056a3; }
+  .icon-circle { width: 36px; height: 36px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .icon-circle img { width: 18px; height: 18px; }
+  
   .main { padding: 100px 25px; transition: margin-left 0.3s; position: relative; z-index: 1; }
   .sidebar.active ~ .main { margin-left: 250px; }
   .trip-section { display: flex; justify-content: center; margin-top: 40px; }
@@ -204,15 +225,27 @@
   .sub-section { display: none; background: #fff; border-radius: 10px; margin: 10px 0; padding: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1);}
   .sub-section img { width: 100%; border-radius: 8px; margin-bottom: 8px;}
   .sub-section h4 { margin: 10px 0 5px; color: #007acc;}
-  .summary-box { background: #fff; border-top: 2px solid #007acc; padding: 15px; margin-top: 10px; min-height: 48px;}
-  .summary-box h4 { margin: 0 0 8px 0; color: #007acc;}
-  #selectedItems { font-size: 0.95rem; color: #333; min-height: 24px; white-space: pre-wrap;}
-  .summary-category { font-weight: bold; margin-top: 8px;}
-  .summary-item { margin-left: 10px; cursor: pointer; }
-  .summary-item:hover { text-decoration: underline; }
-  .total { text-align: right; font-weight: 600; color: #333; padding: 8px 15px; border-top: 1px solid #ddd;}
-  .button-group { display: flex; justify-content: space-between; margin: 10px 15px; }
-  .btn-preview { flex: 1; padding: 12px; font-weight: bold; border-radius: 8px; color: white; text-align: center; cursor: pointer; user-select: none; text-decoration: none; background: #007acc; margin-right: 10px;}
+  
+  /* Summary Box Styles */
+  .summary-box {
+    background: #fff;
+    border-top: 3px solid #007acc;
+    border-bottom: 3px solid #007acc;
+    padding: 20px;
+    margin-top: 20px;
+    min-height: 48px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  }
+  .summary-box h4 { margin: 0 0 12px 0; color: #003a78; font-size: 1.1rem; text-align: center; }
+  #selectedItems { font-size: 0.95rem; color: #333; min-height: 24px; line-height: 1.5; }
+  .summary-category { font-weight: 700; margin-top: 12px; color: #005fa3; display: block; border-bottom: 1px solid #eee; padding-bottom: 4px; }
+  .summary-item { margin-left: 10px; cursor: pointer; display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.9rem; color: #444; }
+  .summary-item:hover { text-decoration: underline; background-color: #f9f9f9; }
+  .summary-price { font-weight: 600; color: #007acc; margin-left: 10px; }
+  .total { text-align: right; font-weight: 700; color: #003a78; padding: 15px 0 0 0; margin-top: 10px; border-top: 2px dashed #cce7ff; font-size: 1.2rem; }
+  
+  .button-group { display: flex; justify-content: space-between; margin: 15px 0; }
+  .btn-preview { flex: 1; padding: 12px; font-weight: bold; border-radius: 8px; color: white; text-align: center; cursor: pointer; user-select: none; text-decoration: none; background: #007acc; border: none; font-size: 1rem;}
   .btn-preview:hover { background: #005f99; }
   .panel > ul > li.toggle-sublist { font-weight: 700; color: #007acc; cursor: pointer;}
   
@@ -283,6 +316,7 @@
   .hotel-details-slider { text-align: center; }
   .map-btn {
     margin-top: 12px;
+    margin-right: 10px; /* Space between buttons */
     background-color: #007acc;
     color: white;
     border: none;
@@ -297,6 +331,8 @@
     transition: background-color 0.3s;
   }
   .map-btn:hover { background-color: #005f99; }
+  .map-btn.secondary { background-color: #28a745; }
+  .map-btn.secondary:hover { background-color: #218838; }
 
   /* Mobile-specific styles */
   @media (max-width: 768px) {
@@ -312,28 +348,8 @@
     .popup-image-content { max-width: 95%; max-height: 70%; }
     .popup-caption { font-size: 1.1rem; bottom: 10%; }
     .map-modal-content { width: 95%; height: 60vh; }
+    .amenity-grid { grid-template-columns: 1fr; }
   }
-  .icon-circle {
-  width:36px;
-  height:36px;
-  background:white;
-  border-radius:50%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.icon-circle img {
-  width:18px;
-  height:18px;
-}
-
-.sidebar a {
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
 </style>
 </head>
 <body>
@@ -351,7 +367,7 @@
 </div>
 
 <!-- Image Popup Modal -->
-<div id="imagePopupModal" class="image-popup-modal" onclick="closeImagePopup(event)">
+<div id="imagePopupModal" class="modal-base image-popup-modal" onclick="closeImagePopup(event)">
   <span class="popup-close" onclick="closeImagePopup(event)">&times;</span>
   <div style="position:relative; display:flex; flex-direction:column; align-items:center;">
     <img class="popup-image-content" id="popupImageSrc" src="">
@@ -360,13 +376,26 @@
 </div>
 
 <!-- Map Popup Modal -->
-<div id="mapPopupModal" class="map-popup-modal">
-  <div class="map-modal-content">
-    <div class="map-modal-header">
-      <h3 class="map-modal-title" id="mapModalTitle">Hotel Location</h3>
-      <button class="map-close-btn" onclick="closeMapPopup()">&times;</button>
+<div id="mapPopupModal" class="modal-base">
+  <div class="modal-content-base map-modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="mapModalTitle">Hotel Location</h3>
+      <button class="modal-close-btn" onclick="closeMapPopup()">&times;</button>
     </div>
     <iframe id="mapIframe" src="" allowfullscreen="" loading="lazy"></iframe>
+  </div>
+</div>
+
+<!-- Amenities Popup Modal -->
+<div id="amenitiesPopupModal" class="modal-base">
+  <div class="modal-content-base amenities-modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title" id="amenitiesModalTitle">Amenities</h3>
+      <button class="modal-close-btn" onclick="closeAmenitiesPopup()">&times;</button>
+    </div>
+    <div class="amenities-body" id="amenitiesBody">
+        <!-- Content injected via JS -->
+    </div>
   </div>
 </div>
 
@@ -458,10 +487,41 @@ const hotelImages = {
   rivasaResort: ["https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/room-imgs/200710170911208196-208261-28701d28-a418-40cb-aa14-d55884e92b26.jpg","https://r1imghtlak.mmtcdn.com/a4030424-e52b-489c-8d8d-ccc89a1f2377.jpeg","https://r1imghtlak.mmtcdn.com/bfc1855d-619b-4ff2-8c98-14f05f15c39f.jpg","https://r1imghtlak.mmtcdn.com/9304bb0eef1911e99bd00242ac110002.jpg","https://r1imghtlak.mmtcdn.com/b72dca6c59c211e98bf40242ac110002.jpg", "https://r1imghtlak.mmtcdn.com/c83c9520a01711eba0200242ac110002.jpg","https://r1imghtlak.mmtcdn.com/8af42401-5d90-44c0-b4b4-4259b5e43a03.jpg","https://r1imghtlak.mmtcdn.com/641781fb-eec6-4ed9-a42a-4c53b85133ca.jpg","https://r2imghtlak.mmtcdn.com/r2-mmt-htl-image/htl-imgs/200710170911208196-54de1d88-e842-42b7-b6dd-a2a148404e17.jpg", "https://r1imghtlak.mmtcdn.com/458bc260ca3811e99bb90242ac110003.jpg","https://r1imghtlak.mmtcdn.com/b57f3e14ef1611e9b20a0242ac110002.jpg","https://r1imghtlak.mmtcdn.com/bed284ca9ffb11eb943d0242ac110004.jpg","https://r1imghtlak.mmtcdn.com/de96ce66ef1611e9b6db0242ac110005.jpg","https://r1imghtlak.mmtcdn.com/5b5637b6-cd13-4e45-a2c3-035484a7fba5.jpg","https://r1imghtlak.mmtcdn.com/6e1b6d22-8226-4ee0-a99c-0976c233d969.jpg"]
 };
 
+// Updated hotelDetailsMap with Amenities
 const hotelDetailsMap = {
-  casaMaria: { img: hotelImages.casaMaria[0], title: "Casa Maria", desc: "Room Amenities", location: "Hotel Casa Maria Holiday St, Gauravaddo, Calangute, Goa 403516" },
-  mayfieldBoutique: { img: hotelImages.mayfieldBoutique[0], title: "Mayfield Boutique", desc: "Boutique rooms feature additional space, modern furnishings, premium linen, a work desk, and a balcony with garden or pool view.", location: "Naikawaddo, near Calangute - Anjuna Rd, near Dharwadkar Hospital, Dongorpur, Calangute, Goa 403516" },
-  rivasaResort: { img: hotelImages.rivasaResort[0], title: "Rivasa Resort", desc: "Rivasa Resort – Calangute, Goa", location: "Rivasa Resort - 5 mins walk to Calangute Beach, Dr Afonso Rd, Calangute, Goa 403516" }
+  casaMaria: { 
+    img: hotelImages.casaMaria[0], 
+    title: "Casa Maria", 
+    desc: "Charming rooms with essential amenities for a comfortable stay.", 
+    location: "Hotel Casa Maria Holiday St, Gauravaddo, Calangute, Goa 403516",
+    amenities: {
+        "Room Amenities": ["Air Conditioning", "Free Wi-Fi", "Flat-screen TV", "Room Service", "Private Bathroom", "Wardrobe"],
+        "Hotel Facilities": ["Free Parking", "24-hour Front Desk", "Garden", "Terrace", "Laundry Service"],
+        "Dining": ["On-site Restaurant", "Breakfast Available"]
+    }
+  },
+  mayfieldBoutique: { 
+    img: hotelImages.mayfieldBoutique[0], 
+    title: "Mayfield Boutique", 
+    desc: "Boutique rooms feature additional space, modern furnishings, premium linen.", 
+    location: "Naikawaddo, near Calangute - Anjuna Rd, near Dharwadkar Hospital, Dongorpur, Calangute, Goa 403516",
+    amenities: {
+        "Room Amenities": ["Air Conditioning", "High-speed Wi-Fi", "Minibar", "Personal Safe", "Work Desk", "Balcony"],
+        "Hotel Facilities": ["Outdoor Swimming Pool", "Spa & Wellness Centre", "Fitness Centre", "Concierge Service"],
+        "Dining": ["Multi-cuisine Restaurant", "Poolside Bar", "Special Diet Menus"]
+    }
+  },
+  rivasaResort: { 
+    img: hotelImages.rivasaResort[0], 
+    title: "Rivasa Resort", 
+    desc: "Relaxing resort near the beach with excellent facilities.", 
+    location: "Rivasa Resort - 5 mins walk to Calangute Beach, Dr Afonso Rd, Calangute, Goa 403516",
+    amenities: {
+        "Room Amenities": ["Air Conditioning", "Free Wi-Fi", "Satellite TV", "Tea/Coffee Maker", "Ironing Facilities"],
+        "Hotel Facilities": ["Swimming Pool", "Tour Desk", "Car Rental", "Free Parking", "Airport Shuttle"],
+        "Dining": ["Restaurant", "Bar/Lounge", "Packed Lunches"]
+    }
+  }
 };
 
 // --- CORE UTILITY FUNCTIONS ---
@@ -475,51 +535,73 @@ function closeContact() { document.getElementById("contactPopup").classList.remo
 function openImagePopup(src, name) { const modal = document.getElementById("imagePopupModal"); const img = document.getElementById("popupImageSrc"); const caption = document.getElementById("popupImageCaption"); img.src = src; caption.innerText = name; modal.classList.add("active"); }
 function closeImagePopup(e) { if (e.target.id === "imagePopupModal" || e.target.classList.contains('popup-close')) { document.getElementById("imagePopupModal").classList.remove("active"); } }
 
+// --- AMENITIES POPUP LOGIC ---
+function openAmenitiesPopup(hotelType) {
+    const modal = document.getElementById("amenitiesPopupModal");
+    const title = document.getElementById("amenitiesModalTitle");
+    const body = document.getElementById("amenitiesBody");
+    const hotel = hotelDetailsMap[hotelType];
+
+    if(!hotel) return;
+
+    title.innerText = hotel.title + " - Amenities";
+    let html = "";
+    
+    // Iterate through categories
+    for (const category in hotel.amenities) {
+        html += `<div class="amenity-category">${category}</div>`;
+        html += `<div class="amenity-grid">`;
+        hotel.amenities[category].forEach(item => {
+            // Simple icon logic based on text (optional, can be defaulted)
+            let icon = "✔️"; // Default check
+            if(item.toLowerCase().includes("pool")) icon = "🏊";
+            if(item.toLowerCase().includes("wifi")) icon = "📶";
+            if(item.toLowerCase().includes("restaurant") || item.toLowerCase().includes("dining")) icon = "🍽️";
+            if(item.toLowerCase().includes("ac") || item.toLowerCase().includes("air conditioning")) icon = "❄️";
+            
+            html += `<div class="amenity-item"><span class="amenity-icon">${icon}</span> ${item}</div>`;
+        });
+        html += `</div>`;
+    }
+    
+    body.innerHTML = html;
+    modal.classList.add("active");
+}
+
+function closeAmenitiesPopup() {
+    document.getElementById("amenitiesPopupModal").classList.remove("active");
+}
+
 // --- MAP POPUP LOGIC ---
 function openMapPopup(address) {
   const modal = document.getElementById("mapPopupModal");
   const iframe = document.getElementById("mapIframe");
   const title = document.getElementById("mapModalTitle");
   
-  // Construct the Google Maps embed URL
   const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
   
   iframe.src = mapUrl;
-  title.innerText = "Location: " + address.substring(0, 30) + "..."; // Truncate for display
+  title.innerText = "Location";
   modal.classList.add("active");
 }
 
 function closeMapPopup() {
   const modal = document.getElementById("mapPopupModal");
   const iframe = document.getElementById("mapIframe");
-  iframe.src = ""; // Stop loading map when closed
+  iframe.src = "";
   modal.classList.remove("active");
-
 }
 
 function showTrips() {
   document.getElementById("mainContent").innerHTML = `
     <h2 onclick="goToWebsite()" style="cursor:pointer; color:#1e88e5; display:flex; align-items:center; gap:10px;">
-
-  <span style="
-    width:32px;
-    height:32px;
-    border-radius:50%;
-    background:#1e88e5;
-    display:flex;
-    align-items:center;
-    justify-content:center;">
-    
-    <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
-      <path d="M2.5 19l19-7-19-7v5l15 2-15 2z"/>
-    </svg>
-    
-  </span>
-
-  Explore Our Tour Packages
-
-</h2>
-
+      <span style="width:32px; height:32px; border-radius:50%; background:#1e88e5; display:flex; align-items:center; justify-content:center;">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="white">
+          <path d="M2.5 19l19-7-19-7v5l15 2-15 2z"/>
+        </svg>
+      </span>
+      Explore Our Tour Packages
+    </h2>
     <div class='trip-section'>
       <div class='trip-card'>
         <img src='goabeach.png' alt='Goa Beach'/>
@@ -542,8 +624,10 @@ function loadGoaSelection() {
     <div class="selection-container" id="selectionContainer">
       <img src="goabeach.png" alt="Goa Beach" class="trip-banner" />
       <div class="trip-title">Goa Trip</div>
+      
       <button class="accordion">Days / Nights</button>
       <div class="panel"><ul id="daysList"><li data-days="3" data-nights="2">2 Nights / 3 Days</li><li data-days="4" data-nights="3">3 Nights / 4 Days</li><li data-days="5" data-nights="4">4 Nights / 5 Days</li></ul></div>
+      
       <button class="accordion">Passengers</button>
       <div class="panel">
         <div class="pax-inputs" id="paxInputs">
@@ -551,6 +635,7 @@ function loadGoaSelection() {
           <label for="childCount">Children:<div class="input-group"><button class="btn-decrement" onclick="decrementChild()">-</button><input type="number" id="childCount" min="0" max="10" value="0" class="number-input" /><button class="btn-increment" onclick="incrementChild()">+</button></div><div class="pax-count-display" id="childDisplay">0 Children</div></label>
         </div>
       </div>
+      
       <button class="accordion">Pickup and Drop</button>
       <div class="panel">
         <ul>
@@ -560,6 +645,7 @@ function loadGoaSelection() {
           <ul class="sublist"><li class="transfer-option" data-transfer="airport" data-type="drop" data-price="750">Airport Drop (₹750 per person)</li><li class="transfer-option" data-transfer="railway" data-type="drop" data-price="750">Railway Station Drop (₹750 per person)</li></ul>
         </ul>
       </div>
+      
       <button class="accordion">Hotel</button>
       <div class="panel">
         <ul>
@@ -569,6 +655,7 @@ function loadGoaSelection() {
         </ul>
         <div id="hotelDetails" class="sub-section" style="text-align:center; margin-top:10px; display:none;"></div>
       </div>
+      
       <button class="accordion">Sightseeing</button>
       <div class="panel">
         <ul>
@@ -581,6 +668,7 @@ function loadGoaSelection() {
           <li class="toggle-sublist" data-category="Sightseeing" data-package="dudhsagarWaterfalls"><span class="item-name">Dudhsagar Waterfalls</span><span class="item-price" style="margin-left:20px;">₹2000</span></li><ul class="sublist"></ul>
         </ul>
        </div>
+      
       <button class="accordion">Food</button>
       <div class="panel">
         <div class="food-option" data-type="breakfast" data-category="Food" data-price="300">
@@ -596,12 +684,20 @@ function loadGoaSelection() {
           <span class="food-option-price">₹700 per person</span>
         </div>
       </div>
+
+      <!-- ADDED SUMMARY BOX HERE -->
+      <div class="summary-box">
+        <h4>Selected Items</h4>
+        <div id="selectedItems">None</div>
+        <div class="total" id="totalAmount">Grand Total: ₹0</div>
+      </div>
+
      <div class="button-group">
-  <a href="#" id="previewBtn" class="btn-preview">Preview</a>
-</div>
+       <a href="#" id="previewBtn" class="btn-preview">Preview</a>
+     </div>
   `;
   initializeEventListeners();
-  setTimeout(() => { updateDynamicPrices(); }, 100);
+  setTimeout(() => { updateDynamicPrices(); updateSummary(); }, 100);
 }
 
 // --- PASSENGER COUNT FUNCTIONS ---
@@ -684,7 +780,62 @@ function handleItemClick(item) {
 // --- DYNAMIC UI UPDATES ---
 function updateDynamicPrices() { document.querySelectorAll(".hotel-option").forEach(el => { const t = el.getAttribute("data-type"); if (t && PRICES.hotelPerNight[t]) { const p = PRICES.hotelPerNight[t]; const tp = adultCount + childCount; el.setAttribute("data-price", p * tp); const ps = el.querySelector(".item-price"); if (ps) ps.textContent = formatPrice(p) + " per person"; } }); document.querySelectorAll('[data-category="Sightseeing"]').forEach(el => { const pk = el.getAttribute('data-package'); if (pk && PRICES.sightseeingPackage[pk] !== undefined) { const bp = PRICES.sightseeingPackage[pk]; let tp = 0; if (selectedSightseeingTransport[pk] === 'privateBike') { const c = bikeCounts[pk] || 1; tp = PRICES.sightseeingTransport.privateBike * c; } else if (selectedSightseeingTransport[pk] === 'cabWithDriver' || selectedSightseeingTransport[pk] === 'cabWithoutDriver') { const c = cabCounts[pk] || 1; const p = selectedSightseeingTransport[pk] === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver; tp = p * c; } else if (selectedSightseeingTransport[pk]) { tp = PRICES.sightseeingTransport[selectedSightseeingTransport[pk]]; } const tppl = adultCount + (childCount * 0.5); const price = (bp + tp) * tppl; el.setAttribute("data-price", Math.round(price)); const ps = el.querySelector(".item-price"); if (ps) { if (pk === 'northGoa' || pk === 'southGoa') { if (selectedSightseeingTransport[pk] === 'privateBike') { const c = bikeCounts[pk] || 1; const p = PRICES.sightseeingTransport.privateBike * c; ps.textContent = `${c} Bike${c > 1 ? 's' : ''} (${formatPrice(p)})`; } else if (selectedSightseeingTransport[pk] === 'cabWithDriver' || selectedSightseeingTransport[pk] === 'cabWithoutDriver') { const c = cabCounts[pk] || 1; const t = selectedSightseeingTransport[pk]; const p = t === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver; ps.textContent = `${c} ${t === 'cabWithDriver' ? 'Cab with Driver' : 'Cab without Driver'} (${formatPrice(p * c)})`; } else { ps.textContent = "Free"; } } else { ps.textContent = formatPrice(Math.round(price)); } } else { ps.textContent = formatPrice(Math.round(price)); } } }); document.querySelectorAll('[data-category="Other Activities"]').forEach(el => { const pk = el.getAttribute('data-package'); if (pk && PRICES.otherActivities[pk]) { const price = PRICES.otherActivities[pk] * (adultCount + (childCount * 0.5)); el.setAttribute("data-price", Math.round(price)); const ps = el.querySelector(".item-price"); if (ps) ps.textContent = formatPrice(Math.round(price)); } }); }
 
-function updateSummary() { if (selectedItems.length === 0) { document.getElementById("selectedItems").innerHTML = "None"; document.getElementById("totalAmount").textContent = "Grand Total: ₹0"; totalAmount = 0; return; } const categories = {}; totalAmount = 0; selectedItems.forEach(item => { if (!categories[item.category]) categories[item.category] = []; categories[item.category].push(item); }); let html = `<div class="summary-category">Trip Duration</div><div class="summary-item">${daysSelected} Days / ${nightsSelected} Nights</div>`; html += `<div class="summary-category">Passengers</div><div class="summary-item">${adultCount} Adult${adultCount > 1 ? 's' : ''}${childCount > 0 ? ', ' + childCount + ' Child' + (childCount > 1 ? 'ren' : '') : ''}</div>`; for (const cat in categories) { html += `<div class="summary-category">${cat}</div>`; categories[cat].forEach(item => { let line = `${item.name}`; const tppl = adultCount + (childCount * 0.5); if (item.price > 0) { if (cat === "Hotel" && item.perPersonPrice) { line += ` (${formatPrice(item.perPersonPrice)} × ${adultCount + childCount} people = ${formatPrice(item.price)})`; } else if (cat === "Food" && item.perPersonPrice) { const cp = Math.floor(item.perPersonPrice * 0.5); line += ` (${formatPrice(item.perPersonPrice)} × ${adultCount} adults`; if (childCount > 0) line += ` + ${formatPrice(cp)} × ${childCount} children`; line += ` = ${formatPrice(item.price)})`; } else if (cat === "Sightseeing") { const bp = PRICES.sightseeingPackage[item.type]; if (bp === 0) { line += ` (Free tour`; if (item.transport && item.transport !== 'ownTransfer') { if (item.transport === 'privateBike' && item.bikeCount > 0) line += ` + ${formatPrice(PRICES.sightseeingTransport.privateBike)} × ${item.bikeCount} bike${item.bikeCount > 1 ? 's' : ''}`; else if ((item.transport === 'cabWithDriver' || item.transport === 'cabWithoutDriver') && item.cabCount > 0) { const p = item.transport === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver; line += ` + ${formatPrice(p)} × ${item.cabCount} ${item.transport}`; } else line += ` + ${formatPrice(PRICES.sightseeingTransport[item.transport])} × ${tppl} people for ${item.transport}`; } line += ` = ${formatPrice(item.price)})`; } else { line += ` (${formatPrice(bp)} × ${tppl} people`; if (item.transport && item.transport !== 'ownTransfer') { if (item.transport === 'privateBike' && item.bikeCount > 0) line += ` + ${formatPrice(PRICES.sightseeingTransport.privateBike)} × ${item.bikeCount} bike${item.bikeCount > 1 ? 's' : ''}`; else if ((item.transport === 'cabWithDriver' || item.transport === 'cabWithoutDriver') && item.cabCount > 0) { const p = item.transport === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver; line += ` + ${formatPrice(p)} × ${item.cabCount} ${item.transport}`; } else line += ` + ${formatPrice(PRICES.sightseeingTransport[item.transport])} × ${tppl} people for ${item.transport}`; } line += ` = ${formatPrice(item.price)})`; } } else if (cat === "Transportation" && (item.key === 'pickup' || item.key === 'drop')) { line += ` (${formatPrice(PRICES.transportation[item.key])} × ${adultCount} adults = ${formatPrice(item.price)})`; } else { line += ` (${formatPrice(item.price)})`; } } else { if (cat === "Sightseeing" && PRICES.sightseeingPackage[item.type] === 0) { line += ` (Free tour`; if (item.transport && item.transport !== 'ownTransfer') { if (item.transport === 'privateBike' && item.bikeCount > 0) line += ` + ${formatPrice(PRICES.sightseeingTransport.privateBike)} × ${item.bikeCount} bike${item.bikeCount > 1 ? 's' : ''}`; else if ((item.transport === 'cabWithDriver' || item.transport === 'cabWithoutDriver') && item.cabCount > 0) { const p = item.transport === 'cabWithDriver' ? PRICES.sightseeingTransport.cabWithDriver : PRICES.sightseeingTransport.cabWithoutDriver; line += ` + ${formatPrice(p)} × ${item.cabCount} ${item.transport}`; } else line += ` + ${formatPrice(PRICES.sightseeingTransport[item.transport])} × ${tppl} people for ${item.transport}`; } line += ` = ${formatPrice(item.price)})`; } else { line += ` (Free)`; } } html += `<div class="summary-item" data-category="${item.category}" data-type="${item.type}">${line}</div>`; totalAmount += item.price; }); } document.getElementById("selectedItems").innerHTML = html; document.getElementById("totalAmount").textContent = `Grand Total: ${formatPrice(totalAmount)}`; document.querySelectorAll('.summary-item').forEach(item => { item.addEventListener('click', () => { const c = item.dataset.category; const t = item.dataset.type; if (c === 'Hotel') showHotelDetails(t); if (c === 'Transportation' || c === 'Sightseeing' || c === 'Cruise' || c === 'Other Activities') { const acc = [...document.querySelectorAll('.accordion')].find(a => a.textContent.toLowerCase().includes(c.toLowerCase())); if (acc) { acc.click(); acc.scrollIntoView({ behavior: 'smooth', block: 'center' }); } } }); }); }
+function updateSummary() { 
+    const itemsDiv = document.getElementById("selectedItems"); 
+    const totalDiv = document.getElementById("totalAmount"); 
+    
+    if (selectedItems.length === 0) { 
+        itemsDiv.innerHTML = "None"; 
+        totalDiv.textContent = "Grand Total: ₹0"; 
+        totalAmount = 0; 
+        return; 
+    } 
+    
+    const categories = {}; 
+    totalAmount = 0; 
+    
+    selectedItems.forEach(item => { 
+        if (!categories[item.category]) categories[item.category] = []; 
+        categories[item.category].push(item); 
+    }); 
+    
+    let html = `<div class="summary-category">Trip Duration</div><div class="summary-item"><span>${daysSelected} Days / ${nightsSelected} Nights</span></div>`; 
+    html += `<div class="summary-category">Passengers</div><div class="summary-item"><span>${adultCount} Adult${adultCount > 1 ? 's' : ''}${childCount > 0 ? ', ' + childCount + ' Child' + (childCount > 1 ? 'ren' : '') : ''}</span></div>`; 
+    
+    for (const cat in categories) { 
+        html += `<div class="summary-category">${cat}</div>`; 
+        categories[cat].forEach(item => { 
+            let line = `${item.name}`; 
+            const tppl = adultCount + (childCount * 0.5); 
+            
+            // Price formatting logic
+            let priceDisplay = formatPrice(item.price);
+            if (item.price === 0) priceDisplay = "Free";
+            
+            html += `<div class="summary-item" data-category="${item.category}" data-type="${item.type}"><span>${line}</span><span class="summary-price">${priceDisplay}</span></div>`; 
+            totalAmount += item.price; 
+        }); 
+    } 
+    
+    itemsDiv.innerHTML = html; 
+    totalDiv.textContent = `Grand Total: ${formatPrice(totalAmount)}`; 
+    
+    document.querySelectorAll('.summary-item').forEach(item => { 
+        item.addEventListener('click', () => { 
+            const c = item.dataset.category; 
+            const t = item.dataset.type; 
+            if (c === 'Hotel') showHotelDetails(t); 
+            if (c === 'Transportation' || c === 'Sightseeing' || c === 'Cruise' || c === 'Other Activities') { 
+                const acc = [...document.querySelectorAll('.accordion')].find(a => a.textContent.toLowerCase().includes(c.toLowerCase())); 
+                if (acc) { 
+                    acc.click(); 
+                    acc.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
+                } 
+            } 
+        }); 
+    }); 
+}
+
 function clearSelectionsExceptDaysAndPax() { document.querySelectorAll('.panel li.selected').forEach(el => { if (!el.closest("#daysList")) el.classList.remove('selected'); }); document.querySelectorAll('.food-option.selected').forEach(el => el.classList.remove('selected')); selectedItems = []; selectedPickup = ""; selectedDrop = ""; selectedSightseeingTransport = {}; bikeCounts = {}; cabCounts = {}; document.querySelectorAll('[data-key="pickup"], [data-key="drop"]').forEach(li => { li.classList.remove("selected"); const key = li.getAttribute('data-key'); document.getElementById(`${key}PriceDisplay`).textContent = ""; const hint = li.querySelector(".transfer-selection-hint"); if (hint) hint.style.display = "block"; }); ['northGoa', 'southGoa'].forEach(pk => { const el = document.querySelector(`[data-package="${pk}"]`); if (el) { const ps = el.querySelector('.item-price'); if (ps) ps.textContent = "Free"; } }); }
 
 // --- DETAIL DISPLAY FUNCTIONS ---
@@ -695,9 +846,10 @@ function renderHotelDetailSlide() {
   let h = "";
   if (currentHotelDetailSlide === 0) {
      h = `<h4 style="color:#003a78;">${d.title} Details</h4><p>${d.desc}</p>`;
+     // Added Amenities Button here for better UX
+     h += `<button class="map-btn secondary" onclick="openAmenitiesPopup('${currentHotelType}')">View Amenities</button>`;
   } else {
      h = `<h4 style="color:#003a78;">Location</h4><p>${d.location}</p>`;
-     // Pass the location to the new popup function
      h += `<button class="map-btn" onclick="openMapPopup('${d.location}')">View Map</button>`;
   }
   document.getElementById("hotelDetailSlideContent").innerHTML = h; 
@@ -709,7 +861,7 @@ function prevHotelDetailSlide() { currentHotelDetailSlide = (currentHotelDetailS
 function nextHotelDetailSlide() { currentHotelDetailSlide = (currentHotelDetailSlide === 1) ? 0 : 1; renderHotelDetailSlide(); }
 
 // --- PREVIEW GENERATION ---
-function generatePreview() { const summaryHTML = document.getElementById("selectedItems").innerHTML; const totalText = document.getElementById("totalAmount").innerText; const previewWindow = window.open('', '', 'width=900,height=1200'); let tableRows = ''; if (summaryHTML.trim() === "" || summaryHTML.trim() === "None") { tableRows = "<p>No items selected.</p>"; } else { const tempDiv = document.createElement('div'); tempDiv.innerHTML = summaryHTML; let rows = []; let currentCat = ''; tempDiv.childNodes.forEach(node => { if (node.classList && node.classList.contains('summary-category')) { currentCat = node.innerText; } else if (node.classList && node.classList.contains('summary-item')) { let nameText = node.innerText; let [name, price] = nameText.split(' (₹'); price = price ? "₹" + price.replace(")", "") : "-"; rows.push({category: currentCat, name: name, price: price}); } }); if(rows.length > 0) { tableRows = '<table id="previewTable"><thead><tr><th>Category</th><th>Item</th><th>Price</th></tr></thead><tbody>'; rows.forEach(row => { tableRows += `<tr><td>${row.category || ''}</td><td>${row.name || ''}</td><td>${row.price || '-'}</td></tr>`; }); tableRows += '</tbody></table>'; } } previewWindow.document.write(`<!DOCTYPE html><html><head><title>TT World - Trip Costs</title><style>body{font-family:"Poppins",sans-serif;margin:0;padding:20px 40px;background:#fff;color:#222;line-height:1.4}.top-header{background:#181e39;color:#fff;padding:35px 0 20px 0;position:relative;text-align:center;margin-bottom:30px;border-radius:8px}.top-header .brand{font-size:2.4rem;font-weight:bold;color:#ffe128;letter-spacing:2px;display:block}.top-header .subtitle{color:#ffe128;font-size:1.1rem;margin-top:6px;margin-bottom:30px;letter-spacing:1px;font-style:italic}.top-header .section-icons{margin-bottom:15px}.top-header .section-icons span{background:#ffe128;color:#222;border-radius:6px;margin:0 10px;padding:6px 16px;font-size:1rem;font-weight:500;display:inline-block}.top-header .contacts{font-size:1rem;margin:10px 0 0;color:#fff}.top-header .contacts span{margin:0 20px}.top-header .address{margin-top:7px;font-size:0.92rem;color:#cfcfcf}.yellow-bar{width:100%;background:#ffe128;padding:18px 0;text-align:center;margin:0 0 20px 0;border-radius:8px}.yellow-bar span{font-size:2rem;font-weight:bold;color:#222;letter-spacing:2px}.selected-list{max-width:700px;margin:0 auto;border:2px solid #007acc;border-radius:10px;padding:20px;background:#f9faff}.selected-list h3{margin-bottom:15px;font-size:1.5rem;color:#007acc;text-align:center}.selected-list table{width:100%;border-collapse:collapse;font-size:1.1rem}.selected-list th,.selected-list td{padding:10px 12px;border-bottom:1px solid #ddd;text-align:left}.selected-list th{background:#e0e9f8;color:#222;font-weight:600;border-bottom:3px solid #007acc}.total-row{font-weight:bold;color:#111;font-size:1.3rem;text-align:right;border-top:3px solid #007acc;padding-top:15px}.footer{margin-top:60px;text-align:center;color:#111;font-size:1rem;font-weight:600}</style></head><body><div class="top-header"><span class="brand">TT World</span><div class="subtitle">Trip to the world</div><div class="section-icons"><span>Tour Packages</span><span>Flight Booking</span><span>Train Booking</span><span>Visa Services</span></div><div class="contacts"><span>www.triptotheworld.in</span> | <span>+91 72000 87875</span> | <span>soundarraj@triptotheworld.in</span></div><div class="address">13/1, Arni Road, Kosapet, Vellore</div></div></div><div class="yellow-bar"><span>TRIP COSTS</span></div><div class="selected-list"><h3>Selected Items</h3>${tableRows}<div class="total-row">${totalText}</div></div><div class="footer">Travel far to find yourself — TT World</div></body></html>`);
+function generatePreview() { const summaryHTML = document.getElementById("selectedItems").innerHTML; const totalText = document.getElementById("totalAmount").innerText; const previewWindow = window.open('', '', 'width=900,height=1200'); let tableRows = ''; if (summaryHTML.trim() === "" || summaryHTML.trim() === "None") { tableRows = "<p>No items selected.</p>"; } else { const tempDiv = document.createElement('div'); tempDiv.innerHTML = summaryHTML; let rows = []; let currentCat = ''; tempDiv.childNodes.forEach(node => { if (node.classList && node.classList.contains('summary-category')) { currentCat = node.innerText; } else if (node.classList && node.classList.contains('summary-item')) { let nameText = node.innerText; let [name, price] = nameText.split('₹'); price = price ? "₹" + price.replace(")", "") : "-"; rows.push({category: currentCat, name: name, price: price}); } }); if(rows.length > 0) { tableRows = '<table id="previewTable"><thead><tr><th>Category</th><th>Item</th><th>Price</th></tr></thead><tbody>'; rows.forEach(row => { tableRows += `<tr><td>${row.category || ''}</td><td>${row.name || ''}</td><td>${row.price || '-'}</td></tr>`; }); tableRows += '</tbody></table>'; } } previewWindow.document.write(`<!DOCTYPE html><html><head><title>TT World - Trip Costs</title><style>body{font-family:"Poppins",sans-serif;margin:0;padding:20px 40px;background:#fff;color:#222;line-height:1.4}.top-header{background:#181e39;color:#fff;padding:35px 0 20px 0;position:relative;text-align:center;margin-bottom:30px;border-radius:8px}.top-header .brand{font-size:2.4rem;font-weight:bold;color:#ffe128;letter-spacing:2px;display:block}.top-header .subtitle{color:#ffe128;font-size:1.1rem;margin-top:6px;margin-bottom:30px;letter-spacing:1px;font-style:italic}.top-header .section-icons{margin-bottom:15px}.top-header .section-icons span{background:#ffe128;color:#222;border-radius:6px;margin:0 10px;padding:6px 16px;font-size:1rem;font-weight:500;display:inline-block}.top-header .contacts{font-size:1rem;margin:10px 0 0;color:#fff}.top-header .contacts span{margin:0 20px}.top-header .address{margin-top:7px;font-size:0.92rem;color:#cfcfcf}.yellow-bar{width:100%;background:#ffe128;padding:18px 0;text-align:center;margin:0 0 20px 0;border-radius:8px}.yellow-bar span{font-size:2rem;font-weight:bold;color:#222;letter-spacing:2px}.selected-list{max-width:700px;margin:0 auto;border:2px solid #007acc;border-radius:10px;padding:20px;background:#f9faff}.selected-list h3{margin-bottom:15px;font-size:1.5rem;color:#007acc;text-align:center}.selected-list table{width:100%;border-collapse:collapse;font-size:1.1rem}.selected-list th,.selected-list td{padding:10px 12px;border-bottom:1px solid #ddd;text-align:left}.selected-list th{background:#e0e9f8;color:#222;font-weight:600;border-bottom:3px solid #007acc}.total-row{font-weight:bold;color:#111;font-size:1.3rem;text-align:right;border-top:3px solid #007acc;padding-top:15px}.footer{margin-top:60px;text-align:center;color:#111;font-size:1rem;font-weight:600}</style></head><body><div class="top-header"><span class="brand">TT World</span><div class="subtitle">Trip to the world</div><div class="section-icons"><span>Tour Packages</span><span>Flight Booking</span><span>Train Booking</span><span>Visa Services</span></div><div class="contacts"><span>www.triptotheworld.in</span> | <span>+91 72000 87875</span> | <span>soundarraj@triptotheworld.in</span></div><div class="address">13/1, Arni Road, Kosapet, Vellore</div></div></div><div class="yellow-bar"><span>TRIP COSTS</span></div><div class="selected-list"><h3>Selected Items</h3>${tableRows}<div class="total-row">${totalText}</div></div><div class="footer">Travel far to find yourself — TT World</div></body></html>`);
   previewWindow.document.close();
 }
 
